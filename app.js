@@ -64,6 +64,15 @@ const elements = typeof document !== 'undefined' ? {
     licenseKeyInput: document.getElementById('license-key-input'),
     activateLicenseBtn: document.getElementById('activate-license-btn'),
     
+    // Login Form Elements
+    toggleLoginBtn: document.getElementById('toggle-login-btn'),
+    toggleRegisterBtn: document.getElementById('toggle-register-btn'),
+    premiumLoginContainer: document.getElementById('premium-login-container'),
+    premiumEmailInput: document.getElementById('premium-email-input'),
+    premiumPasswordInput: document.getElementById('premium-password-input'),
+    premiumLoginSubmitBtn: document.getElementById('premium-login-submit-btn'),
+    
+    // Payment Modal
     paymentModal: document.getElementById('payment-modal'),
     paymentModalClose: document.getElementById('payment-modal-close'),
     paySubmitBtn: document.getElementById('pay-submit-btn'),
@@ -656,6 +665,62 @@ function initPremium() {
         } else {
             showToast('Geçersiz lisans kodu! Kod GTR- ile başlamalıdır.', true);
         }
+    });
+
+    // Toggle views: Show Login Form
+    elements.toggleLoginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector('.pricing-container').style.display = 'none';
+        elements.premiumLoginContainer.style.display = 'block';
+    });
+
+    // Toggle views: Show Pricing / Register Form
+    elements.toggleRegisterBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        elements.premiumLoginContainer.style.display = 'none';
+        document.querySelector('.pricing-container').style.display = 'block';
+    });
+
+    // Handle Premium Login Submission
+    elements.premiumLoginSubmitBtn.addEventListener('click', () => {
+        const email = elements.premiumEmailInput.value.trim();
+        const password = elements.premiumPasswordInput.value.trim();
+
+        if (!email || !email.includes('@')) {
+            showToast('Lütfen geçerli bir e-posta adresi girin.', true);
+            return;
+        }
+        if (password.length < 6) {
+            showToast('Şifreniz en az 6 karakter olmalıdır.', true);
+            return;
+        }
+
+        // Simulating authentication delay
+        elements.premiumLoginSubmitBtn.textContent = '🔑 Giriş Yapılıyor...';
+        elements.premiumLoginSubmitBtn.disabled = true;
+
+        setTimeout(() => {
+            elements.premiumLoginSubmitBtn.textContent = '🔑 Premium Giriş Yap';
+            elements.premiumLoginSubmitBtn.disabled = false;
+
+            // Validate against mock test account or allow any valid format
+            if ((email === 'premium@gitturkce.com' && password === 'premium123') || (email && password.length >= 6)) {
+                state.isSubscribed = true;
+                localStorage.setItem('git_tr_subscribed', 'true');
+                
+                // Reset inputs and view toggle
+                elements.premiumEmailInput.value = '';
+                elements.premiumPasswordInput.value = '';
+                elements.premiumLoginContainer.style.display = 'none';
+                document.querySelector('.pricing-container').style.display = 'block';
+
+                refreshSubscriptionUI();
+                renderCuratedRepos();
+                showToast('🔑 Başarıyla giriş yapıldı. Hoş geldiniz!');
+            } else {
+                showToast('Hatalı e-posta veya şifre!', true);
+            }
+        }, 1200);
     });
 }
 

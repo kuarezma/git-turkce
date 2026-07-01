@@ -175,7 +175,34 @@
                             <input type="text" id="license-key-input" placeholder="Satın aldığınız lisans anahtarını girin (Örn: GTR-12345)..." style="padding-left: 1rem;">
                             <button id="activate-license-btn" class="secondary-btn" style="padding: 0.8rem 1.2rem;">Aktifleştir</button>
                         </div>
-                        <p class="field-help">Lisans anahtarınız yoksa yukarıdaki butonla simüle ödeme yapıp anında kod alabilirsiniz.</p>
+                        <p class="field-help" style="margin-bottom: 1rem;">Lisans anahtarınız yoksa yukarıdaki butonla simüle ödeme yapıp anında kod alabilirsiniz.</p>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Zaten üye misiniz? <a href="#" id="toggle-login-btn" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Premium Giriş Yapın</a></p>
+                    </div>
+                </div>
+
+                <!-- Premium Login Form Container -->
+                <div class="pricing-container" id="premium-login-container" style="display: none;">
+                    <span class="pricing-badge" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);">Premium Giriş</span>
+                    <h3 class="pricing-title" style="margin-bottom: 1.5rem;">👑 Premium Üye Girişi</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 1rem; text-align: left; margin-bottom: 1.5rem;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="premium-email-input" style="font-size: 0.85rem;">E-posta Adresi</label>
+                            <input type="email" id="premium-email-input" placeholder="E-postanızı girin (Örn: premium@gitturkce.com)" style="padding: 0.8rem; background: rgba(8, 7, 14, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="premium-password-input" style="font-size: 0.85rem;">Şifre</label>
+                            <input type="password" id="premium-password-input" placeholder="Şifrenizi girin" style="padding: 0.8rem; background: rgba(8, 7, 14, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff;">
+                        </div>
+                    </div>
+
+                    <button id="premium-login-submit-btn" class="primary-btn" style="width: 100%; padding: 1rem; font-size: 1.05rem;">
+                        🔑 Premium Giriş Yap
+                    </button>
+                    
+                    <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Henüz Premium üye değil misiniz? <a href="#" id="toggle-register-btn" style="color: var(--primary); text-decoration: none; font-weight: 600;">Hemen Abone Olun</a></p>
+                        <p class="field-help" style="font-size: 0.75rem;">Test Hesabı: <code>premium@gitturkce.com</code> / Şifre: <code>premium123</code></p>
                     </div>
                 </div>
             </section>
