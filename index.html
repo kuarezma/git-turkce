@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Kaşifi - Projeleri Türkçe Keşfet, İndir ve Kur</title>
+    <meta name="description" content="GitHub'daki en popüler ve faydalı açık kaynak kodlu projeleri keşfedin, Türkçeye çevirin, ne işe yaradıklarını ve nasıl kurulacağını öğrenin.">
+    <!-- Google Fonts: Outfit & Fira Code for terminal scripts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Glow effects in background -->
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
+
+        <!-- Sidebar / Navigation Header -->
+        <header class="main-header">
+            <div class="logo">
+                <span class="logo-icon">🚀</span>
+                <h1>Git<span>Türkçe</span></h1>
+            </div>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" id="tab-curated" data-target="panel-curated">
+                    <span class="tab-icon">✨</span> Keşfet (Seçkinler)
+                </button>
+                <button class="nav-tab" id="tab-live" data-target="panel-live">
+                    <span class="tab-icon">🔍</span> Canlı Arama & Link
+                </button>
+                <button class="nav-tab" id="tab-settings" data-target="panel-settings">
+                    <span class="tab-icon">⚙️</span> Gemini API
+                </button>
+                <button class="nav-tab premium-highlight" id="tab-premium" data-target="panel-premium">
+                    <span class="tab-icon">👑</span> Premium Üyelik
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- PANEL 1: Curated Hub (Keşfet) -->
+            <section class="content-panel active" id="panel-curated">
+                <div class="panel-header">
+                    <h2>En Faydalı GitHub Projeleri</h2>
+                    <p>Geliştiricilerin işine en çok yarayan popüler açık kaynaklı projelerin Türkçe incelemeleri ve kurulum yolları.</p>
+                </div>
+
+                <!-- Categories filter -->
+                <div class="category-filters">
+                    <button class="filter-btn active" data-category="all">Hepsi</button>
+                    <button class="filter-btn" data-category="Yapay Zeka">🧠 Yapay Zeka</button>
+                    <button class="filter-btn" data-category="Web Geliştirme">🌐 Web Geliştirme</button>
+                    <button class="filter-btn" data-category="Mobil & Masaüstü">📱 Mobil & Masaüstü</button>
+                    <button class="filter-btn" data-category="Araçlar">🛠️ Araçlar & Kitaplıklar</button>
+                </div>
+
+                <!-- Curated Repos Grid -->
+                <div class="repos-grid" id="curated-grid">
+                    <!-- Cards will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- PANEL 2: Live Search & Link (Canlı Arama) -->
+            <section class="content-panel" id="panel-live">
+                <div class="panel-header">
+                    <h2>Canlı GitHub Arama ve Analiz</h2>
+                    <p>Herhangi bir konuyu aratın veya doğrudan bir GitHub repository linkini (URL) yapıştırarak anında Türkçe'ye çevirin ve inceleyin.</p>
+                </div>
+
+                <!-- Search Input Bar -->
+                <div class="search-box-container">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="search-input" placeholder="Arama yapın (örn: 'ollama') veya GitHub linki yapıştırın (örn: 'https://github.com/ollama/ollama')...">
+                        <button id="search-btn" class="primary-btn">Ara ve Çevir</button>
+                    </div>
+                    <!-- Rapid query tags -->
+                    <div class="search-suggestions">
+                        <span>Hızlı Kelimeler:</span>
+                        <button class="suggestion-tag">AI agents</button>
+                        <button class="suggestion-tag">Web UI components</button>
+                        <button class="suggestion-tag">FastAPI</button>
+                        <button class="suggestion-tag">React compiler</button>
+                        <button class="suggestion-tag">Docker templates</button>
+                    </div>
+                </div>
+
+                <!-- Live Results Area -->
+                <div class="live-results-container">
+                    <!-- Status Alerts -->
+                    <div class="status-indicator" id="live-status" style="display: none;">
+                        <span class="spinner"></span>
+                        <span class="status-text">GitHub'dan veri çekiliyor...</span>
+                    </div>
+
+                    <!-- Search Grid -->
+                    <div class="repos-grid" id="live-grid">
+                        <!-- Search results will show here -->
+                        <div class="empty-state" id="search-empty-state">
+                            <span class="empty-icon">📁</span>
+                            <h3>Henüz arama yapmadınız</h3>
+                            <p>Yukarıdaki arama çubuğunu kullanarak veya bir GitHub proje linki girerek aramaya başlayabilirsiniz.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL 3: Settings (Gemini API Ayarları) -->
+            <section class="content-panel" id="panel-settings">
+                <div class="panel-header">
+                    <h2>Yapay Zeka Destekli Akıllı Analiz Ayarları</h2>
+                    <p>Canlı GitHub aramalarında yapay zekanın projeyi tam analiz etmesini, ne işe yaradığını Türkçe olarak "anlayacağınız dilde" açıklamasını sağlamak için kendi Gemini API anahtarınızı ekleyebilirsiniz.</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3>Gemini API Yapılandırması</h3>
+                    <div class="form-group">
+                        <label for="gemini-key">Gemini API Anahtarı (API Key)</label>
+                        <input type="password" id="gemini-key" placeholder="AIzaSy... ile başlayan anahtarınızı girin">
+                        <p class="field-help">API anahtarınızı <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a> üzerinden ücretsiz alabilirsiniz.</p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-settings-btn" class="primary-btn">Anahtarı Kaydet</button>
+                        <button id="clear-settings-btn" class="secondary-btn">Temizle</button>
+                    </div>
+
+                    <div class="api-status-badge inactive" id="api-status">
+                        <span class="status-dot"></span>
+                        <span id="api-status-text">Gemini Entegrasyonu Devre Dışı (Standart Çeviri Modu Aktif)</span>
+                    </div>
+
+                    <!-- Security Alert -->
+                    <div class="security-note">
+                        <h4>🔒 Güvenlik & Gizlilik Bildirimi</h4>
+                        <p>API anahtarınız hiçbir sunucuya gönderilmez, tamamen tarayıcınızın güvenli yerel belleğinde (<code>localStorage</code>) saklanır. GitHub istekleri doğrudan tarayıcınızdan Google Gemini API uç noktalarına yapılır.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL 4: Premium Subscription (Abonelik) -->
+            <section class="content-panel" id="panel-premium">
+                <div class="panel-header">
+                    <h2>👑 GitTürkçe Premium Üyelik</h2>
+                    <p>Sınırsız proje erişimi, canlı kod çevirisi ve yapay zeka entegrasyonu ile yazılım dünyasını Türkçe keşfedin.</p>
+                </div>
+
+                <div class="pricing-container">
+                    <span class="pricing-badge">Sınırsız Erişim</span>
+                    <h3 class="pricing-title">GitTürkçe Premium</h3>
+                    <div class="pricing-price">99 TL <span>/ Aylık</span></div>
+                    
+                    <ul class="pricing-features">
+                        <li><span class="check-icon">✓</span> 100+ Popüler GitHub Projesine Detaylı Erişim</li>
+                        <li><span class="check-icon">✓</span> Canlı GitHub URL / Link Çözümleyici ve Klonlayıcı</li>
+                        <li><span class="check-icon">✓</span> Gemini API Entegrasyonu ile Yapay Zeka Türkçe Çeviri</li>
+                        <li><span class="check-icon">✓</span> Tek Tıkla ZIP Olarak İndirme ve Hızlı Kurulum Kodları</li>
+                        <li><span class="check-icon">✓</span> Reklamsız, Süper Hızlı ve Premium Gece Teması</li>
+                    </ul>
+
+                    <div id="premium-status-section">
+                        <!-- Will display subscription activation actions or activated badge -->
+                        <button id="open-pay-modal-btn" class="primary-btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                            💳 Hemen Abone Ol (99 TL)
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
+                        <h4 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.5rem;">Lisans Anahtarı ile Aktifleştir</h4>
+                        <div class="search-input-wrapper" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="license-key-input" placeholder="Satın aldığınız lisans anahtarını girin (Örn: GTR-12345)..." style="padding-left: 1rem;">
+                            <button id="activate-license-btn" class="secondary-btn" style="padding: 0.8rem 1.2rem;">Aktifleştir</button>
+                        </div>
+                        <p class="field-help">Lisans anahtarınız yoksa yukarıdaki butonla simüle ödeme yapıp anında kod alabilirsiniz.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <p>© 2026 GitTürkçe - Uğur Hoca Standartlarına Uygun Olarak Geliştirilmiştir.</p>
+        </footer>
+    </div>
+
+    <!-- DETAIL PANEL (Slide-over / Modal) -->
+    <div class="modal-overlay" id="detail-modal">
+        <div class="modal-container">
+            <button class="modal-close-btn" id="modal-close">&times;</button>
+            
+            <div class="modal-header-content">
+                <div class="modal-repo-info">
+                    <span class="modal-repo-badge" id="modal-repo-lang">Go</span>
+                    <span class="modal-repo-stars" id="modal-repo-stars-count">⭐ 12k</span>
+                </div>
+                <h3 id="modal-repo-title">ollama / ollama</h3>
+                <h4 id="modal-repo-tr-title">Yerel Yapay Zeka Model Sunucusu</h4>
+                <a href="#" target="_blank" rel="noopener" class="github-link" id="modal-repo-link">
+                    GitHub Sayfasına Git ↗
+                </a>
+            </div>
+
+            <div class="modal-body-content">
+                <!-- Tab for Original vs Translated (optional or integrated) -->
+                <div class="detail-section">
+                    <h4>💡 Tek Cümleyle Nedir?</h4>
+                    <p class="highlight-text" id="modal-tr-summary">Yükleniyor...</p>
+                </div>
+
+                <div class="detail-section">
+                    <h4>❓ Neden Yararlı / Hangi Problemi Çözer?</h4>
+                    <p id="modal-why-useful">Yükleniyor...</p>
+                </div>
+
+                <div class="detail-section">
+                    <h4>🛠️ Nasıl Kurulur ve Çalıştırılır? (Kurulum)</h4>
+                    <div class="code-terminal">
+                        <div class="terminal-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                            <span class="terminal-title">Kurulum Adımları</span>
+                            <button class="copy-btn" id="btn-copy-code">Kopyala</button>
+                        </div>
+                        <pre><code id="modal-how-to-use"># Kurulum komutları yükleniyor...</code></pre>
+                    </div>
+                </div>
+
+                <!-- Downloader and Action panel -->
+                <div class="detail-actions">
+                    <a href="#" class="action-btn download-btn" id="modal-download-zip" download>
+                        📦 Projeyi ZIP Olarak İndir
+                    </a>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="detail-section original-box">
+                    <h4>📄 Orijinal İngilizce Açıklama</h4>
+                    <blockquote id="modal-en-desc">...</blockquote>
+                </div>
+            </div>
+        </div>
+    <!-- PAYMENT MODAL -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="payment-modal-container">
+            <button class="modal-close-btn" id="payment-modal-close">&times;</button>
+            
+            <div class="modal-header-payment">
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">💳 Premium Abonelik Ödemesi</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Kart bilgilerinizi girerek aboneliğinizi anında başlatın.</p>
+            </div>
+
+            <!-- 3D Credit Card Preview -->
+            <div class="credit-card-preview">
+                <div class="card-preview-chip"></div>
+                <div class="card-preview-number" id="preview-card-number">•••• •••• •••• ••••</div>
+                <div class="card-preview-bottom">
+                    <div>
+                        <div style="font-size: 0.65rem; text-transform: uppercase;">Kart Sahibi</div>
+                        <div class="card-preview-name" id="preview-card-holder">AD SOYAD</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.65rem; text-transform: uppercase;">Son Kul.</div>
+                        <div class="card-preview-expiry" id="preview-card-expiry">AA/YY</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Inputs Form -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="card-holder-input" style="font-size: 0.8rem;">Kart Sahibi Adı</label>
+                    <input type="text" id="card-holder-input" placeholder="Kart üzerindeki isim" style="padding: 0.7rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="card-number-input" style="font-size: 0.8rem;">Kart Numarası</label>
+                    <input type="text" id="card-number-input" maxlength="19" placeholder="0000 0000 0000 0000" style="padding: 0.7rem;">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 2; margin-bottom: 0;">
+                        <label for="card-expiry-input" style="font-size: 0.8rem;">Son Kullanma Tarihi</label>
+                        <input type="text" id="card-expiry-input" maxlength="5" placeholder="AA/YY" style="padding: 0.7rem; text-align: center;">
+                    </div>
+                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                        <label for="card-cvc-input" style="font-size: 0.8rem;">CVC</label>
+                        <input type="password" id="card-cvc-input" maxlength="3" placeholder="000" style="padding: 0.7rem; text-align: center;">
+                    </div>
+                </div>
+
+                <button id="pay-submit-btn" class="primary-btn" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
+                    🔒 Ödemeyi Güvenli Tamamla (99 TL)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-notification" id="toast">Kopyalandı!</div>
+
+    <!-- Script imports -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
