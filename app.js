@@ -3,18 +3,26 @@
  * Türkçe GitHub Kaşifi Mantığı ve API Entegrasyonları
  */
 
+const PREMIUM_STORAGE_KEY = 'git_tr_subscribed';
+const PREMIUM_EMAIL_STORAGE_KEY = 'git_tr_premium_email';
+const DEMO_PREMIUM_ACCOUNT = Object.freeze({
+    email: 'premium@gitturkce.com',
+    password: 'premium123'
+});
+
 // Application State
 const state = {
     activeTab: 'panel-curated',
     geminiApiKey: (typeof localStorage !== 'undefined' ? localStorage.getItem('git_tr_gemini_key') : '') || '',
     curatedFilter: 'all',
-    isSubscribed: (typeof localStorage !== 'undefined' ? localStorage.getItem('git_tr_subscribed') === 'true' : false),
+    isSubscribed: (typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_STORAGE_KEY) === 'true' : false),
+    premiumEmail: (typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_EMAIL_STORAGE_KEY) : '') || '',
     searchCache: (() => {
         if (typeof localStorage === 'undefined') return {};
         try {
             const cached = localStorage.getItem('git_tr_search_cache');
             return cached ? JSON.parse(cached) : {};
-        } catch (e) {
+        } catch {
             return {};
         }
     })(),
@@ -67,9 +75,11 @@ const elements = typeof document !== 'undefined' ? {
     // Login Form Elements
     toggleLoginBtn: document.getElementById('toggle-login-btn'),
     toggleRegisterBtn: document.getElementById('toggle-register-btn'),
+    premiumSubscriptionContainer: document.getElementById('premium-subscription-container'),
     premiumLoginContainer: document.getElementById('premium-login-container'),
     premiumEmailInput: document.getElementById('premium-email-input'),
     premiumPasswordInput: document.getElementById('premium-password-input'),
+    premiumLoginError: document.getElementById('premium-login-error'),
     premiumLoginSubmitBtn: document.getElementById('premium-login-submit-btn'),
     
     // Payment Modal
@@ -193,16 +203,19 @@ function initFilters() {
 function createRepoCard(repo, isCurated, isLocked = false) {
     const card = document.createElement('div');
     card.className = isLocked ? 'repo-card locked' : 'repo-card';
+
+    const repositoryTitle = isCurated ? `${repo.owner} / ${repo.name}` : repo.full_name;
+    const repositoryDescription = isCurated ? repo.turkishSummary : (repo.description || 'Açıklama bulunmuyor.');
     
     card.innerHTML = `
         <div class="card-top">
             <div class="card-header">
-                <span class="repo-lang-badge">${repo.language || 'Kod'}</span>
-                <span class="repo-stars">⭐ ${repo.stars || '0'}</span>
+                <span class="repo-lang-badge">${escapeHtml(repo.language || 'Kod')}</span>
+                <span class="repo-stars">⭐ ${escapeHtml(repo.stars || '0')}</span>
             </div>
-            <h3 class="repo-title">${isCurated ? `${repo.owner} / ${repo.name}` : repo.full_name}</h3>
-            <h4 class="repo-tr-title">${repo.turkishTitle || 'Yükleniyor...'}</h4>
-            <p class="repo-desc">${isCurated ? repo.turkishSummary : (repo.description || 'Açıklama bulunmuyor.')}</p>
+            <h3 class="repo-title">${escapeHtml(repositoryTitle || 'İsimsiz proje')}</h3>
+            <h4 class="repo-tr-title">${escapeHtml(repo.turkishTitle || 'Yükleniyor...')}</h4>
+            <p class="repo-desc">${escapeHtml(repositoryDescription)}</p>
         </div>
         <div class="card-footer">
             <span class="card-action-hint">Detayları Gör ➔</span>
@@ -225,6 +238,16 @@ function createRepoCard(repo, isCurated, isLocked = false) {
     });
     
     return card;
+}
+
+function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+    })[character]);
 }
 
 // 4. Search and Link Detection Logic
@@ -494,6 +517,12 @@ function initModal() {
     elements.detailModal.addEventListener('click', (e) => {
         if (e.target === elements.detailModal) closeModal();
     });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (elements.detailModal.classList.contains('active')) closeModal();
+        if (elements.paymentModal.classList.contains('active')) closePaymentModal();
+    });
     
     // Copy code button inside modal
     elements.btnCopyCode.addEventListener('click', () => {
@@ -529,6 +558,9 @@ async function openRepoDetail(repo, isCurated) {
     
     // Open Modal
     elements.detailModal.classList.add('active');
+    elements.detailModal.inert = false;
+    elements.detailModal.setAttribute('aria-hidden', 'false');
+    elements.modalClose.focus();
     
     if (isCurated) {
         // Pre-populated data
@@ -549,6 +581,8 @@ async function openRepoDetail(repo, isCurated) {
 
 function closeModal() {
     elements.detailModal.classList.remove('active');
+    elements.detailModal.setAttribute('aria-hidden', 'true');
+    elements.detailModal.inert = true;
     state.currentSelectedRepo = null;
 }
 
@@ -572,8 +606,6 @@ function initPremium() {
     // Show/hide UI sections based on active subscription
     refreshSubscriptionUI();
 
-    // Trigger payment modal
-    elements.openPayModalBtn.addEventListener('click', openPaymentModal);
     elements.paymentModalClose.addEventListener('click', closePaymentModal);
     elements.paymentModal.addEventListener('click', (e) => {
         if (e.target === elements.paymentModal) closePaymentModal();
@@ -636,10 +668,9 @@ function initPremium() {
         elements.paySubmitBtn.disabled = true;
 
         setTimeout(() => {
-            state.isSubscribed = true;
-            localStorage.setItem('git_tr_subscribed', 'true');
+            setPremiumSession('Demo ödeme kullanıcısı');
             
-            elements.paySubmitBtn.textContent = '🔒 Ödemeyi Güvenli Tamamla (99 TL)';
+            elements.paySubmitBtn.textContent = 'Demo Ödemeyi Tamamla (99 TL)';
             elements.paySubmitBtn.disabled = false;
             
             closePaymentModal();
@@ -655,43 +686,42 @@ function initPremium() {
     // License activation logic
     elements.activateLicenseBtn.addEventListener('click', () => {
         const license = elements.licenseKeyInput.value.trim();
-        if (license.startsWith('GTR-') && license.length >= 8) {
-            state.isSubscribed = true;
-            localStorage.setItem('git_tr_subscribed', 'true');
+        if (/^GTR-\d{5}$/.test(license)) {
+            setPremiumSession('Lisans kullanıcısı');
             refreshSubscriptionUI();
             renderCuratedRepos();
             showToast('🔑 Lisans anahtarı başarıyla doğrulandı! Premium aktifleşti.');
             elements.licenseKeyInput.value = '';
         } else {
-            showToast('Geçersiz lisans kodu! Kod GTR- ile başlamalıdır.', true);
+            showToast('Geçersiz lisans kodu. Örnek biçim: GTR-12345', true);
         }
     });
 
     // Toggle views: Show Login Form
     elements.toggleLoginBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        document.querySelector('.pricing-container').style.display = 'none';
-        elements.premiumLoginContainer.style.display = 'block';
+        elements.premiumSubscriptionContainer.hidden = true;
+        elements.premiumLoginContainer.hidden = false;
+        elements.premiumLoginError.textContent = '';
+        elements.premiumEmailInput.focus();
     });
 
     // Toggle views: Show Pricing / Register Form
     elements.toggleRegisterBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        elements.premiumLoginContainer.style.display = 'none';
-        document.querySelector('.pricing-container').style.display = 'block';
+        showPremiumSubscriptionView();
     });
 
     // Handle Premium Login Submission
-    elements.premiumLoginSubmitBtn.addEventListener('click', () => {
+    elements.premiumLoginContainer.addEventListener('submit', (event) => {
+        event.preventDefault();
         const email = elements.premiumEmailInput.value.trim();
-        const password = elements.premiumPasswordInput.value.trim();
+        const password = elements.premiumPasswordInput.value;
+        const validation = validatePremiumLogin(email, password);
 
-        if (!email || !email.includes('@')) {
-            showToast('Lütfen geçerli bir e-posta adresi girin.', true);
-            return;
-        }
-        if (password.length < 6) {
-            showToast('Şifreniz en az 6 karakter olmalıdır.', true);
+        elements.premiumLoginError.textContent = validation.message || '';
+        if (!validation.isValid) {
+            showToast(validation.message, true);
             return;
         }
 
@@ -703,25 +733,53 @@ function initPremium() {
             elements.premiumLoginSubmitBtn.textContent = '🔑 Premium Giriş Yap';
             elements.premiumLoginSubmitBtn.disabled = false;
 
-            // Validate against mock test account or allow any valid format
-            if ((email === 'premium@gitturkce.com' && password === 'premium123') || (email && password.length >= 6)) {
-                state.isSubscribed = true;
-                localStorage.setItem('git_tr_subscribed', 'true');
-                
-                // Reset inputs and view toggle
-                elements.premiumEmailInput.value = '';
-                elements.premiumPasswordInput.value = '';
-                elements.premiumLoginContainer.style.display = 'none';
-                document.querySelector('.pricing-container').style.display = 'block';
-
-                refreshSubscriptionUI();
-                renderCuratedRepos();
-                showToast('🔑 Başarıyla giriş yapıldı. Hoş geldiniz!');
-            } else {
-                showToast('Hatalı e-posta veya şifre!', true);
-            }
-        }, 1200);
+            setPremiumSession(email.toLowerCase());
+            elements.premiumEmailInput.value = '';
+            elements.premiumPasswordInput.value = '';
+            elements.premiumLoginError.textContent = '';
+            showPremiumSubscriptionView();
+            refreshSubscriptionUI();
+            renderCuratedRepos();
+            showToast('Premium demo hesabına giriş yapıldı.');
+        }, 500);
     });
+}
+
+function validatePremiumLogin(email, password) {
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+        return { isValid: false, message: 'Geçerli bir e-posta adresi girin.' };
+    }
+
+    if (String(password || '').length < 6) {
+        return { isValid: false, message: 'Şifre en az 6 karakter olmalıdır.' };
+    }
+
+    if (normalizedEmail !== DEMO_PREMIUM_ACCOUNT.email || password !== DEMO_PREMIUM_ACCOUNT.password) {
+        return { isValid: false, message: 'E-posta veya şifre hatalı. Demo hesap bilgilerini kullanın.' };
+    }
+
+    return { isValid: true, message: '' };
+}
+
+function setPremiumSession(email) {
+    state.isSubscribed = true;
+    state.premiumEmail = email;
+    localStorage.setItem(PREMIUM_STORAGE_KEY, 'true');
+    localStorage.setItem(PREMIUM_EMAIL_STORAGE_KEY, email);
+}
+
+function clearPremiumSession() {
+    state.isSubscribed = false;
+    state.premiumEmail = '';
+    localStorage.removeItem(PREMIUM_STORAGE_KEY);
+    localStorage.removeItem(PREMIUM_EMAIL_STORAGE_KEY);
+}
+
+function showPremiumSubscriptionView() {
+    elements.premiumLoginContainer.hidden = true;
+    elements.premiumSubscriptionContainer.hidden = false;
 }
 
 function refreshSubscriptionUI() {
@@ -731,19 +789,17 @@ function refreshSubscriptionUI() {
         elements.premiumStatusSection.innerHTML = `
             <div class="api-status-badge active" style="margin-bottom: 0;">
                 <span class="status-dot"></span>
-                <span>Premium Üyelik Aktif (Sınırsız Erişim Açık)</span>
+                <span>Premium erişim aktif${state.premiumEmail ? ` — ${escapeHtml(state.premiumEmail)}` : ''}</span>
             </div>
-            <button id="cancel-sub-btn" class="secondary-btn" style="margin-top: 1rem; width: 100%;">
-                Aboneliği Sonlandır (Sıfırla)
+            <button id="premium-logout-btn" class="secondary-btn" style="margin-top: 1rem; width: 100%;">
+                Premium Çıkış Yap
             </button>
         `;
-        // Bind dynamic reset button
-        document.getElementById('cancel-sub-btn').addEventListener('click', () => {
-            state.isSubscribed = false;
-            localStorage.removeItem('git_tr_subscribed');
+        document.getElementById('premium-logout-btn').addEventListener('click', () => {
+            clearPremiumSession();
             refreshSubscriptionUI();
             renderCuratedRepos();
-            showToast('Abonelik sonlandırıldı. Kartlar kilitlendi.');
+            showToast('Premium oturumu kapatıldı.');
         });
     } else {
         elements.premiumStatusSection.innerHTML = `
@@ -758,6 +814,8 @@ function refreshSubscriptionUI() {
 
 function openPaymentModal() {
     elements.paymentModal.classList.add('active');
+    elements.paymentModal.inert = false;
+    elements.paymentModal.setAttribute('aria-hidden', 'false');
     // Clear inputs
     elements.cardHolderInput.value = '';
     elements.cardNumberInput.value = '';
@@ -766,10 +824,13 @@ function openPaymentModal() {
     elements.previewCardHolder.textContent = 'AD SOYAD';
     elements.previewCardNumber.textContent = '•••• •••• •••• ••••';
     elements.previewCardExpiry.textContent = 'AA/YY';
+    elements.paymentModalClose.focus();
 }
 
 function closePaymentModal() {
     elements.paymentModal.classList.remove('active');
+    elements.paymentModal.setAttribute('aria-hidden', 'true');
+    elements.paymentModal.inert = true;
 }
 
 // Global reference for inline buttons in template strings
@@ -782,6 +843,8 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
         parseGitHubInput,
         generateDefaultInstructions,
+        validatePremiumLogin,
+        escapeHtml,
         state
     };
 }

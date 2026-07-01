@@ -41,6 +41,10 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 body {
     background-color: var(--bg-dark);
     color: var(--text-main);
@@ -560,6 +564,47 @@ body {
 
 .form-group input:focus {
     border-color: var(--primary);
+}
+
+.form-group input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+}
+
+.premium-login-form[hidden] {
+    display: none;
+}
+
+.premium-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.premium-form-fields .form-group {
+    margin-bottom: 0;
+}
+
+.premium-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.05rem;
+}
+
+.form-error {
+    min-height: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: #fca5a5;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.demo-account-note {
+    font-size: 0.75rem;
 }
 
 .field-help {
@@ -1284,4 +1329,3 @@ body {
         flex-direction: column;
     }
 }
-

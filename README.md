@@ -10,6 +10,9 @@ GitTürkçe, GitHub üzerinde yayınlanan ve yazılımcıların/öğrencilerin i
 4. **Gemini Yapay Zeka Entegrasyonu:** Ayarlar sekmesinden eklenebilen ücretsiz bir Gemini API Anahtarı ile projeleri derinlemesine analiz eder; sade bir dille "Nedir?", "Neden Yararlıdır?" ve "Nasıl Başlanır?" adımlarını otonom üretir.
 5. **Kurulum ve İndirme Paneli:** Beğenilen projeleri ZIP olarak indirme butonu ve projenin diline göre otomatik üretilen terminal kurulum komutları (kopyalama özellikli).
 6. **Responsive Tasarım:** Telefon, tablet ve bilgisayarlardan kolayca erişilebilir, göz yormayan premium karanlık tema (Dark Mode) ve glassmorphism görsel stili.
+7. **Premium Demo Girişi:** Form doğrulaması, hatalı giriş geri bildirimi, kalıcı demo oturumu ve güvenli çıkış akışı. Demo hesap: `premium@gitturkce.com` / `premium123`.
+
+> **Not:** Premium giriş, ödeme ve lisans özellikleri bu statik sürümde tanıtım amaçlıdır. Gerçek üyelik, ödeme ve yetkilendirme için sunucu tarafı kimlik doğrulama ve ödeme sağlayıcısı entegrasyonu gerekir.
 
 ---
 
@@ -41,14 +44,23 @@ Testleri çalıştırmak için:
    ```bash
    npm install
    ```
-2. Test paketini koşturun:
+2. Kalite kontrollerini çalıştırın:
    ```bash
+   npm run validate:html
+   npm run lint
    npm test
    ```
 
 ---
 
 ## 📜 Değişiklik Günlüğü (Changelog)
+
+### 2026-07-02
+- Premium demo üye girişi, doğrulama, oturum durumu ve çıkış akışı tamamlandı.
+- Herhangi bir e-posta/şifreyle premium erişimin açılmasına neden olan doğrulama hatası giderildi.
+- Modal HTML yapısı, klavye erişimi ve ekran okuyucu görünürlüğü düzeltildi.
+- Harici proje verileri ve yerel oturum bilgisinde HTML enjeksiyonu koruması eklendi.
+- ESLint, HTML doğrulama ve premium giriş birim testleri eklendi.
 
 ### v1.0.0 (2026-06-23)
 - Projenin ilk sürümü yayınlandı.
@@ -58,4 +70,3 @@ Testleri çalıştırmak için:
 - Gemini API ile yapay zeka tabanlı akıllı özetleme özelliği eklendi.
 - ZIP indirme ve akıllı kod kopyalama terminalleri modal paneline entegre edildi.
 - Responsive, parıltılı mor/cyan karanlık tema tasarımı tamamlandı.
-- GitHub Actions CI test akış hattı kuruldu.

@@ -1,4 +1,9 @@
-const { parseGitHubInput, generateDefaultInstructions } = require('../app.js');
+const {
+    parseGitHubInput,
+    generateDefaultInstructions,
+    validatePremiumLogin,
+    escapeHtml
+} = require('../app.js');
 
 describe('GitHub Input Parser', () => {
     test('should parse standard https URL', () => {
@@ -66,5 +71,51 @@ describe('Default Instructions Generator', () => {
         const instructions = generateDefaultInstructions('some-repo', 'some-user', 'Assembly');
         expect(instructions).toContain('git clone');
         expect(instructions).toContain('Assembly gereksinimlerine göre');
+    });
+});
+
+describe('Premium Login Validation', () => {
+    test('accepts the documented demo account', () => {
+        expect(validatePremiumLogin('premium@gitturkce.com', 'premium123')).toEqual({
+            isValid: true,
+            message: ''
+        });
+    });
+
+    test('normalizes email casing and surrounding spaces', () => {
+        expect(validatePremiumLogin('  PREMIUM@GITTURKCE.COM ', 'premium123').isValid).toBe(true);
+    });
+
+    test('rejects malformed email addresses', () => {
+        expect(validatePremiumLogin('premium', 'premium123')).toEqual({
+            isValid: false,
+            message: 'Geçerli bir e-posta adresi girin.'
+        });
+    });
+
+    test('rejects short passwords', () => {
+        expect(validatePremiumLogin('premium@gitturkce.com', '123')).toEqual({
+            isValid: false,
+            message: 'Şifre en az 6 karakter olmalıdır.'
+        });
+    });
+
+    test('rejects unknown premium credentials', () => {
+        expect(validatePremiumLogin('ogrenci@example.com', 'premium123')).toEqual({
+            isValid: false,
+            message: 'E-posta veya şifre hatalı. Demo hesap bilgilerini kullanın.'
+        });
+    });
+});
+
+describe('HTML Escaping', () => {
+    test('escapes markup from external repository data', () => {
+        expect(escapeHtml('<img src=x onerror="alert(1)">')).toBe(
+            '&lt;img src=x onerror=&quot;alert(1)&quot;&gt;'
+        );
+    });
+
+    test('converts non-string values safely', () => {
+        expect(escapeHtml(42)).toBe('42');
     });
 });

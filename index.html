@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Kaşifi - Projeleri Türkçe Keşfet, İndir ve Kur</title>
     <meta name="description" content="GitHub'daki en popüler ve faydalı açık kaynak kodlu projeleri keşfedin, Türkçeye çevirin, ne işe yaradıklarını ve nasıl kurulacağını öğrenin.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <!-- Google Fonts: Outfit & Fira Code for terminal scripts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&amp;family=Outfit:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -24,16 +25,16 @@
                 <h1>Git<span>Türkçe</span></h1>
             </div>
             <nav class="nav-tabs">
-                <button class="nav-tab active" id="tab-curated" data-target="panel-curated">
+                <button type="button" class="nav-tab active" id="tab-curated" data-target="panel-curated">
                     <span class="tab-icon">✨</span> Keşfet (Seçkinler)
                 </button>
-                <button class="nav-tab" id="tab-live" data-target="panel-live">
-                    <span class="tab-icon">🔍</span> Canlı Arama & Link
+                <button type="button" class="nav-tab" id="tab-live" data-target="panel-live">
+                    <span class="tab-icon">🔍</span> Canlı Arama &amp; Link
                 </button>
-                <button class="nav-tab" id="tab-settings" data-target="panel-settings">
+                <button type="button" class="nav-tab" id="tab-settings" data-target="panel-settings">
                     <span class="tab-icon">⚙️</span> Gemini API
                 </button>
-                <button class="nav-tab premium-highlight" id="tab-premium" data-target="panel-premium">
+                <button type="button" class="nav-tab premium-highlight" id="tab-premium" data-target="panel-premium">
                     <span class="tab-icon">👑</span> Premium Üyelik
                 </button>
             </nav>
@@ -41,7 +42,7 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            
+
             <!-- PANEL 1: Curated Hub (Keşfet) -->
             <section class="content-panel active" id="panel-curated">
                 <div class="panel-header">
@@ -51,11 +52,11 @@
 
                 <!-- Categories filter -->
                 <div class="category-filters">
-                    <button class="filter-btn active" data-category="all">Hepsi</button>
-                    <button class="filter-btn" data-category="Yapay Zeka">🧠 Yapay Zeka</button>
-                    <button class="filter-btn" data-category="Web Geliştirme">🌐 Web Geliştirme</button>
-                    <button class="filter-btn" data-category="Mobil & Masaüstü">📱 Mobil & Masaüstü</button>
-                    <button class="filter-btn" data-category="Araçlar">🛠️ Araçlar & Kitaplıklar</button>
+                    <button type="button" class="filter-btn active" data-category="all">Hepsi</button>
+                    <button type="button" class="filter-btn" data-category="Yapay Zeka">🧠 Yapay Zeka</button>
+                    <button type="button" class="filter-btn" data-category="Web Geliştirme">🌐 Web Geliştirme</button>
+                    <button type="button" class="filter-btn" data-category="Mobil &amp; Masaüstü">📱 Mobil &amp; Masaüstü</button>
+                    <button type="button" class="filter-btn" data-category="Araçlar">🛠️ Araçlar &amp; Kitaplıklar</button>
                 </div>
 
                 <!-- Curated Repos Grid -->
@@ -76,16 +77,16 @@
                     <div class="search-input-wrapper">
                         <span class="search-icon">🔍</span>
                         <input type="text" id="search-input" placeholder="Arama yapın (örn: 'ollama') veya GitHub linki yapıştırın (örn: 'https://github.com/ollama/ollama')...">
-                        <button id="search-btn" class="primary-btn">Ara ve Çevir</button>
+                        <button type="button" id="search-btn" class="primary-btn">Ara ve Çevir</button>
                     </div>
                     <!-- Rapid query tags -->
                     <div class="search-suggestions">
                         <span>Hızlı Kelimeler:</span>
-                        <button class="suggestion-tag">AI agents</button>
-                        <button class="suggestion-tag">Web UI components</button>
-                        <button class="suggestion-tag">FastAPI</button>
-                        <button class="suggestion-tag">React compiler</button>
-                        <button class="suggestion-tag">Docker templates</button>
+                        <button type="button" class="suggestion-tag">AI agents</button>
+                        <button type="button" class="suggestion-tag">Web UI components</button>
+                        <button type="button" class="suggestion-tag">FastAPI</button>
+                        <button type="button" class="suggestion-tag">React compiler</button>
+                        <button type="button" class="suggestion-tag">Docker templates</button>
                     </div>
                 </div>
 
@@ -120,13 +121,13 @@
                     <h3>Gemini API Yapılandırması</h3>
                     <div class="form-group">
                         <label for="gemini-key">Gemini API Anahtarı (API Key)</label>
-                        <input type="password" id="gemini-key" placeholder="AIzaSy... ile başlayan anahtarınızı girin">
+                        <input type="password" id="gemini-key" autocomplete="new-password" placeholder="AIzaSy... ile başlayan anahtarınızı girin">
                         <p class="field-help">API anahtarınızı <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a> üzerinden ücretsiz alabilirsiniz.</p>
                     </div>
 
                     <div class="form-actions">
-                        <button id="save-settings-btn" class="primary-btn">Anahtarı Kaydet</button>
-                        <button id="clear-settings-btn" class="secondary-btn">Temizle</button>
+                        <button type="button" id="save-settings-btn" class="primary-btn">Anahtarı Kaydet</button>
+                        <button type="button" id="clear-settings-btn" class="secondary-btn">Temizle</button>
                     </div>
 
                     <div class="api-status-badge inactive" id="api-status">
@@ -136,7 +137,7 @@
 
                     <!-- Security Alert -->
                     <div class="security-note">
-                        <h4>🔒 Güvenlik & Gizlilik Bildirimi</h4>
+                        <h4>🔒 Güvenlik &amp; Gizlilik Bildirimi</h4>
                         <p>API anahtarınız hiçbir sunucuya gönderilmez, tamamen tarayıcınızın güvenli yerel belleğinde (<code>localStorage</code>) saklanır. GitHub istekleri doğrudan tarayıcınızdan Google Gemini API uç noktalarına yapılır.</p>
                     </div>
                 </div>
@@ -149,11 +150,11 @@
                     <p>Sınırsız proje erişimi, canlı kod çevirisi ve yapay zeka entegrasyonu ile yazılım dünyasını Türkçe keşfedin.</p>
                 </div>
 
-                <div class="pricing-container">
+                <div class="pricing-container" id="premium-subscription-container">
                     <span class="pricing-badge">Sınırsız Erişim</span>
                     <h3 class="pricing-title">GitTürkçe Premium</h3>
                     <div class="pricing-price">99 TL <span>/ Aylık</span></div>
-                    
+
                     <ul class="pricing-features">
                         <li><span class="check-icon">✓</span> 100+ Popüler GitHub Projesine Detaylı Erişim</li>
                         <li><span class="check-icon">✓</span> Canlı GitHub URL / Link Çözümleyici ve Klonlayıcı</li>
@@ -164,7 +165,7 @@
 
                     <div id="premium-status-section">
                         <!-- Will display subscription activation actions or activated badge -->
-                        <button id="open-pay-modal-btn" class="primary-btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                        <button type="button" id="open-pay-modal-btn" class="primary-btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
                             💳 Hemen Abone Ol (99 TL)
                         </button>
                     </div>
@@ -173,38 +174,40 @@
                         <h4 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.5rem;">Lisans Anahtarı ile Aktifleştir</h4>
                         <div class="search-input-wrapper" style="margin-bottom: 0.5rem;">
                             <input type="text" id="license-key-input" placeholder="Satın aldığınız lisans anahtarını girin (Örn: GTR-12345)..." style="padding-left: 1rem;">
-                            <button id="activate-license-btn" class="secondary-btn" style="padding: 0.8rem 1.2rem;">Aktifleştir</button>
+                            <button type="button" id="activate-license-btn" class="secondary-btn" style="padding: 0.8rem 1.2rem;">Aktifleştir</button>
                         </div>
-                        <p class="field-help" style="margin-bottom: 1rem;">Lisans anahtarınız yoksa yukarıdaki butonla simüle ödeme yapıp anında kod alabilirsiniz.</p>
+                        <p class="field-help" style="margin-bottom: 1rem;">Bu sürümde ödeme ve lisans işlemleri tanıtım amaçlıdır.</p>
                         <p style="font-size: 0.85rem; color: var(--text-muted);">Zaten üye misiniz? <a href="#" id="toggle-login-btn" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Premium Giriş Yapın</a></p>
                     </div>
                 </div>
 
                 <!-- Premium Login Form Container -->
-                <div class="pricing-container" id="premium-login-container" style="display: none;">
+                <form class="pricing-container premium-login-form" id="premium-login-container" hidden novalidate>
                     <span class="pricing-badge" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);">Premium Giriş</span>
                     <h3 class="pricing-title" style="margin-bottom: 1.5rem;">👑 Premium Üye Girişi</h3>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 1rem; text-align: left; margin-bottom: 1.5rem;">
+
+                    <div class="premium-form-fields">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="premium-email-input" style="font-size: 0.85rem;">E-posta Adresi</label>
-                            <input type="email" id="premium-email-input" placeholder="E-postanızı girin (Örn: premium@gitturkce.com)" style="padding: 0.8rem; background: rgba(8, 7, 14, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff;">
+                            <input type="email" id="premium-email-input" placeholder="E-posta adresiniz" autocomplete="email" required>
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="premium-password-input" style="font-size: 0.85rem;">Şifre</label>
-                            <input type="password" id="premium-password-input" placeholder="Şifrenizi girin" style="padding: 0.8rem; background: rgba(8, 7, 14, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff;">
+                            <input type="password" id="premium-password-input" placeholder="Şifrenizi girin" autocomplete="current-password" minlength="6" required>
                         </div>
                     </div>
 
-                    <button id="premium-login-submit-btn" class="primary-btn" style="width: 100%; padding: 1rem; font-size: 1.05rem;">
+                    <p class="form-error" id="premium-login-error" role="alert" aria-live="polite"></p>
+
+                    <button type="submit" id="premium-login-submit-btn" class="primary-btn premium-submit-btn">
                         🔑 Premium Giriş Yap
                     </button>
-                    
+
                     <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
                         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Henüz Premium üye değil misiniz? <a href="#" id="toggle-register-btn" style="color: var(--primary); text-decoration: none; font-weight: 600;">Hemen Abone Olun</a></p>
-                        <p class="field-help" style="font-size: 0.75rem;">Test Hesabı: <code>premium@gitturkce.com</code> / Şifre: <code>premium123</code></p>
+                        <p class="field-help demo-account-note">Demo hesabı: <code>premium@gitturkce.com</code> / <code>premium123</code>. Gerçek üyelik doğrulaması için sunucu entegrasyonu gerekir.</p>
                     </div>
-                </div>
+                </form>
             </section>
         </main>
 
@@ -215,10 +218,10 @@
     </div>
 
     <!-- DETAIL PANEL (Slide-over / Modal) -->
-    <div class="modal-overlay" id="detail-modal">
+    <div class="modal-overlay" id="detail-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-repo-title" inert>
         <div class="modal-container">
-            <button class="modal-close-btn" id="modal-close">&times;</button>
-            
+            <button type="button" class="modal-close-btn" id="modal-close" aria-label="Proje ayrıntılarını kapat">&times;</button>
+
             <div class="modal-header-content">
                 <div class="modal-repo-info">
                     <span class="modal-repo-badge" id="modal-repo-lang">Go</span>
@@ -251,7 +254,7 @@
                             <span class="dot yellow"></span>
                             <span class="dot green"></span>
                             <span class="terminal-title">Kurulum Adımları</span>
-                            <button class="copy-btn" id="btn-copy-code">Kopyala</button>
+                            <button type="button" class="copy-btn" id="btn-copy-code">Kopyala</button>
                         </div>
                         <pre><code id="modal-how-to-use"># Kurulum komutları yükleniyor...</code></pre>
                     </div>
@@ -272,14 +275,15 @@
                 </div>
             </div>
         </div>
+    </div>
     <!-- PAYMENT MODAL -->
-    <div class="modal-overlay" id="payment-modal">
+    <div class="modal-overlay" id="payment-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="payment-modal-title" inert>
         <div class="payment-modal-container">
-            <button class="modal-close-btn" id="payment-modal-close">&times;</button>
-            
+            <button type="button" class="modal-close-btn" id="payment-modal-close" aria-label="Ödeme penceresini kapat">&times;</button>
+
             <div class="modal-header-payment">
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">💳 Premium Abonelik Ödemesi</h3>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">Kart bilgilerinizi girerek aboneliğinizi anında başlatın.</p>
+                <h3 id="payment-modal-title" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">💳 Premium Abonelik Ödemesi</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Tanıtım ödeme formunu doldurarak demo premium erişimini başlatın.</p>
             </div>
 
             <!-- 3D Credit Card Preview -->
@@ -302,27 +306,27 @@
             <div style="display: flex; flex-direction: column; gap: 1rem;">
                 <div class="form-group" style="margin-bottom: 0;">
                     <label for="card-holder-input" style="font-size: 0.8rem;">Kart Sahibi Adı</label>
-                    <input type="text" id="card-holder-input" placeholder="Kart üzerindeki isim" style="padding: 0.7rem;">
+                    <input type="text" id="card-holder-input" placeholder="Kart üzerindeki isim" autocomplete="cc-name" style="padding: 0.7rem;">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">
                     <label for="card-number-input" style="font-size: 0.8rem;">Kart Numarası</label>
-                    <input type="text" id="card-number-input" maxlength="19" placeholder="0000 0000 0000 0000" style="padding: 0.7rem;">
+                    <input type="text" id="card-number-input" maxlength="19" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" style="padding: 0.7rem;">
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
                     <div class="form-group" style="flex: 2; margin-bottom: 0;">
                         <label for="card-expiry-input" style="font-size: 0.8rem;">Son Kullanma Tarihi</label>
-                        <input type="text" id="card-expiry-input" maxlength="5" placeholder="AA/YY" style="padding: 0.7rem; text-align: center;">
+                        <input type="text" id="card-expiry-input" maxlength="5" inputmode="numeric" autocomplete="cc-exp" placeholder="AA/YY" style="padding: 0.7rem; text-align: center;">
                     </div>
                     <div class="form-group" style="flex: 1; margin-bottom: 0;">
                         <label for="card-cvc-input" style="font-size: 0.8rem;">CVC</label>
-                        <input type="password" id="card-cvc-input" maxlength="3" placeholder="000" style="padding: 0.7rem; text-align: center;">
+                        <input type="text" id="card-cvc-input" maxlength="3" inputmode="numeric" autocomplete="cc-csc" placeholder="000" style="padding: 0.7rem; text-align: center;">
                     </div>
                 </div>
 
-                <button id="pay-submit-btn" class="primary-btn" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
-                    🔒 Ödemeyi Güvenli Tamamla (99 TL)
+                <button type="button" id="pay-submit-btn" class="primary-btn" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
+                    Demo Ödemeyi Tamamla (99 TL)
                 </button>
             </div>
         </div>

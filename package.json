@@ -3,13 +3,19 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "lint": "eslint .",
+    "test": "jest",
+    "validate:html": "html-validate index.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.6.0",
+    "globals": "^17.7.0",
+    "html-validate": "^10.17.0",
     "jest": "^30.4.2"
   }
 }
