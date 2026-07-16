@@ -4,7 +4,9 @@ const {
     validatePremiumLogin,
     escapeHtml,
     fetchWeeklyPopularRepos,
-    fetchMostStarredRepos
+    fetchMostStarredRepos,
+    fetchAgentRepos,
+    fetchSkillsRepos
 } = require('../app.js');
 
 describe('GitHub Input Parser', () => {
@@ -170,6 +172,36 @@ describe('Weekly Popular Repositories API', () => {
         expect(result).toEqual(mockRepos);
         expect(global.fetch).toHaveBeenCalledWith(
             expect.stringContaining('https://api.github.com/search/repositories?q=stars')
+        );
+    });
+
+    test('should fetch and return agent repositories', async () => {
+        const mockRepos = [{ name: 'agent-1', stars: 2000 }];
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({ items: mockRepos })
+            })
+        );
+        const result = await fetchAgentRepos();
+        expect(result).toEqual(mockRepos);
+        expect(global.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('agent')
+        );
+    });
+
+    test('should fetch and return skills repositories', async () => {
+        const mockRepos = [{ name: 'skills-1', stars: 1000 }];
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({ items: mockRepos })
+            })
+        );
+        const result = await fetchSkillsRepos();
+        expect(result).toEqual(mockRepos);
+        expect(global.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('mcp')
         );
     });
 });

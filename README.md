@@ -46,7 +46,17 @@ Uygulama herhangi bir sunucu veya derleme adımı gerektirmeden doğrudan taray�
    ```bash
    npm run build:mac
    ```
-   Paketlenen uygulama `dist/` klasörü altına kaydedilecektir.
+   Apple Silicon (M1/M2/M3/M4) için optimize edilmiş uygulama `dist/GitTurkce-darwin-arm64/` klasörüne kaydedilir.
+
+   Intel + Apple Silicon birlikte desteklemek için:
+   ```bash
+   npm run build:mac:universal
+   ```
+
+3. **Uygulama açılmıyorsa (macOS):** İmzasız uygulamalarda macOS güvenlik uyarısı çıkabilir. Çözüm:
+   - Finder'da uygulamaya sağ tıklayıp **Aç** seçeneğini kullanın (ilk seferde).
+   - Veya Terminal'de: `xattr -cr dist/GitTurkce-darwin-arm64/GitTurkce.app`
+   - Uygulamayı internetten indirdiyseniz karantina özniteliğini kaldırmak gerekir.
 
 ---
 

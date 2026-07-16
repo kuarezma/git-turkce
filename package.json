@@ -4,7 +4,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build:mac": "electron-packager . GitTurkce --platform=darwin --arch=universal --out=dist/ --overwrite --icon=icon.icns",
+    "build:mac": "electron-packager . GitTurkce --platform=darwin --arch=arm64 --out=dist/ --overwrite --icon=icon.icns --ignore='^/dist$|^/coverage$|^/test$|^/graphify-out$|^/\\.git$' && codesign --force --deep --sign - dist/GitTurkce-darwin-arm64/GitTurkce.app",
+    "build:mac:universal": "electron-packager . GitTurkce --platform=darwin --arch=universal --out=dist/ --overwrite --icon=icon.icns --ignore='^/dist$|^/coverage$|^/test$|^/graphify-out$|^/\\.git$' && codesign --force --deep --sign - dist/GitTurkce-darwin-universal/GitTurkce.app",
     "lint": "eslint .",
     "test": "jest",
     "validate:html": "html-validate index.html"

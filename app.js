@@ -234,6 +234,16 @@ async function renderCuratedRepos() {
         return;
     }
 
+    if (state.curatedFilter === 'Agent') {
+        await renderMergedCategory('Agent', fetchAgentRepos, "GitHub'dan en popüler yapay zeka ajan projeleri yükleniyor...");
+        return;
+    }
+
+    if (state.curatedFilter === 'Skills') {
+        await renderMergedCategory('Skills', fetchSkillsRepos, "GitHub'dan en popüler MCP ve Yetenek (Skills) projeleri yükleniyor...");
+        return;
+    }
+
     const filteredRepos = state.curatedFilter === 'all' 
         ? CURATED_REPOSITORIES 
         : CURATED_REPOSITORIES.filter(repo => repo.tags.includes(state.curatedFilter));
@@ -249,6 +259,49 @@ async function renderCuratedRepos() {
         const card = createRepoCard(repo, true, isLocked);
         elements.curatedGrid.appendChild(card);
     });
+}
+
+async function renderMergedCategory(categoryName, fetchFunc, loadingText) {
+    elements.curatedGrid.innerHTML = `
+        <div class="status-indicator" style="display: flex; grid-column: 1 / -1; justify-content: center; padding: 2rem;">
+            <span class="spinner"></span>
+            <span class="status-text">${loadingText}</span>
+        </div>
+    `;
+    try {
+        const curated = CURATED_REPOSITORIES.filter(repo => repo.tags.includes(categoryName));
+        const apiRepos = await fetchFunc();
+        
+        // Merge without duplicates (curated takes precedence)
+        const merged = [...curated];
+        apiRepos.forEach(apiRepo => {
+            const exists = curated.some(c => 
+                c.name.toLowerCase() === apiRepo.name.toLowerCase() && 
+                (c.owner || '').toLowerCase() === (apiRepo.owner.login || apiRepo.owner || '').toLowerCase()
+            );
+            if (!exists) {
+                merged.push(apiRepo);
+            }
+        });
+        
+        elements.curatedGrid.innerHTML = '';
+        if (merged.length > 0) {
+            merged.forEach((repo, idx) => {
+                const isLocked = !state.isSubscribed && idx > 2;
+                const isCurated = curated.some(c => 
+                    c.name.toLowerCase() === repo.name.toLowerCase() && 
+                    (c.owner || '').toLowerCase() === (repo.owner.login || repo.owner || '').toLowerCase()
+                );
+                const card = createRepoCard(repo, isCurated, isLocked);
+                elements.curatedGrid.appendChild(card);
+            });
+        } else {
+            showCuratedEmptyState('Sonuç Bulunamadı', 'Projeler çekilemedi.');
+        }
+    } catch (e) {
+        console.error(e);
+        showCuratedEmptyState('Hata Oluştu', 'Proje verileri çekilirken bir hata ile karşılaşıldı.');
+    }
 }
 
 function showCuratedEmptyState(title, desc) {
@@ -486,6 +539,40 @@ async function fetchMostStarredRepos() {
     const items = data.items || [];
     
     // Save to Cache
+    saveToSearchCache(cacheKey, items);
+    return items;
+}
+
+// GitHub API: Fetch AI Agent-related Repositories
+async function fetchAgentRepos() {
+    const cacheKey = 'agent_repos';
+    if (state.searchCache[cacheKey]) {
+        return state.searchCache[cacheKey];
+    }
+    
+    const query = 'agent OR agents OR autonomous-agent OR AI-agent';
+    const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=100`);
+    if (!res.ok) throw new Error('GitHub API Error');
+    const data = await res.json();
+    const items = data.items || [];
+    
+    saveToSearchCache(cacheKey, items);
+    return items;
+}
+
+// GitHub API: Fetch MCP & Skills-related Repositories
+async function fetchSkillsRepos() {
+    const cacheKey = 'skills_repos';
+    if (state.searchCache[cacheKey]) {
+        return state.searchCache[cacheKey];
+    }
+    
+    const query = 'mcp-server OR claude-skills OR agent-skills OR "model-context-protocol" OR "claude-code"';
+    const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=100`);
+    if (!res.ok) throw new Error('GitHub API Error');
+    const data = await res.json();
+    const items = data.items || [];
+    
     saveToSearchCache(cacheKey, items);
     return items;
 }
@@ -1002,6 +1089,8 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         escapeHtml,
         fetchWeeklyPopularRepos,
         fetchMostStarredRepos,
+        fetchAgentRepos,
+        fetchSkillsRepos,
         state
     };
 }
