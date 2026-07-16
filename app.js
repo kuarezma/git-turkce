@@ -10,13 +10,16 @@ const DEMO_PREMIUM_ACCOUNT = Object.freeze({
     password: 'premium123'
 });
 
+// Detect Electron environment
+const isElectron = typeof navigator !== 'undefined' && /electron/i.test(navigator.userAgent);
+
 // Application State
 const state = {
     activeTab: 'panel-curated',
     geminiApiKey: (typeof localStorage !== 'undefined' ? localStorage.getItem('git_tr_gemini_key') : '') || '',
     curatedFilter: 'all',
-    isSubscribed: (typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_STORAGE_KEY) === 'true' : false),
-    premiumEmail: (typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_EMAIL_STORAGE_KEY) : '') || '',
+    isSubscribed: isElectron || (typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_STORAGE_KEY) === 'true' : false),
+    premiumEmail: isElectron ? 'Masaüstü Sürümü' : ((typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_EMAIL_STORAGE_KEY) : '') || ''),
     searchCache: (() => {
         if (typeof localStorage === 'undefined') return {};
         try {
@@ -44,6 +47,10 @@ const elements = typeof document !== 'undefined' ? {
     liveStatus: document.getElementById('live-status'),
     searchEmptyState: document.getElementById('search-empty-state'),
     
+    // Weekly Popular
+    weeklyGrid: document.getElementById('weekly-grid'),
+    weeklyStatus: document.getElementById('weekly-status'),
+    
     // Settings
     geminiKeyInput: document.getElementById('gemini-key'),
     saveSettingsBtn: document.getElementById('save-settings-btn'),
@@ -68,6 +75,7 @@ const elements = typeof document !== 'undefined' ? {
     
     // Premium Panel & Modals
     premiumStatusSection: document.getElementById('premium-status-section'),
+    premiumActivationSection: document.getElementById('premium-activation-section'),
     openPayModalBtn: document.getElementById('open-pay-modal-btn'),
     licenseKeyInput: document.getElementById('license-key-input'),
     activateLicenseBtn: document.getElementById('activate-license-btn'),
@@ -129,6 +137,10 @@ function initTabs() {
             tab.classList.add('active');
             document.getElementById(target).classList.add('active');
             state.activeTab = target;
+
+            if (target === 'panel-weekly') {
+                loadWeeklyRepos();
+            }
         });
     });
 }
@@ -379,6 +391,69 @@ async function searchGitHub(query) {
     return items;
 }
 
+// GitHub API: Fetch Weekly Popular Repositories
+async function fetchWeeklyPopularRepos() {
+    const cacheKey = 'weekly_popular_repos';
+    if (state.searchCache[cacheKey]) {
+        return state.searchCache[cacheKey];
+    }
+    
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const dateString = sevenDaysAgo.toISOString().split('T')[0];
+    const query = `created:>${dateString}`;
+    
+    const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=100`);
+    if (!res.ok) throw new Error('GitHub API Error');
+    const data = await res.json();
+    const items = data.items || [];
+    
+    // Save to Cache
+    saveToSearchCache(cacheKey, items);
+    return items;
+}
+
+// UI: Load Weekly Popular Repositories
+async function loadWeeklyRepos() {
+    if (!elements.weeklyGrid) return;
+    
+    // UI state loading
+    elements.weeklyGrid.innerHTML = '';
+    elements.weeklyStatus.style.display = 'flex';
+    
+    try {
+        const repos = await fetchWeeklyPopularRepos();
+        elements.weeklyStatus.style.display = 'none';
+        
+        if (repos && repos.length > 0) {
+            repos.forEach((repo, idx) => {
+                // If not subscribed, lock items after index 2
+                const isLocked = !state.isSubscribed && idx > 2;
+                const card = createRepoCard(repo, false, isLocked);
+                elements.weeklyGrid.appendChild(card);
+            });
+        } else {
+            elements.weeklyGrid.innerHTML = `
+                <div class="empty-state">
+                    <span class="empty-icon">⚠️</span>
+                    <h3>Sonuç Bulunamadı</h3>
+                    <p>Bu haftanın popüler projeleri çekilemedi. Lütfen daha sonra tekrar deneyin.</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        elements.weeklyStatus.style.display = 'none';
+        elements.weeklyGrid.innerHTML = `
+            <div class="empty-state">
+                <span class="empty-icon">⚠️</span>
+                <h3>Hata Oluştu</h3>
+                <p>GitHub API sınırına ulaşılmış veya bağlantı sorunu yaşıyor olabilirsiniz.</p>
+            </div>
+        `;
+        console.error(error);
+    }
+}
+
 function saveToSearchCache(key, value) {
     state.searchCache[key] = value;
     // Limit cache size in localStorage (keep max 30 items)
@@ -386,7 +461,9 @@ function saveToSearchCache(key, value) {
     if (keys.length > 30) {
         delete state.searchCache[keys[0]];
     }
-    localStorage.setItem('git_tr_search_cache', JSON.stringify(state.searchCache));
+    if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('git_tr_search_cache', JSON.stringify(state.searchCache));
+    }
 }
 
 // 5. Translation & AI Summarization Engine
@@ -786,27 +863,45 @@ function refreshSubscriptionUI() {
     if (typeof document === 'undefined') return;
 
     if (state.isSubscribed) {
-        elements.premiumStatusSection.innerHTML = `
-            <div class="api-status-badge active" style="margin-bottom: 0;">
-                <span class="status-dot"></span>
-                <span>Premium erişim aktif${state.premiumEmail ? ` — ${escapeHtml(state.premiumEmail)}` : ''}</span>
-            </div>
-            <button id="premium-logout-btn" class="secondary-btn" style="margin-top: 1rem; width: 100%;">
-                Premium Çıkış Yap
-            </button>
-        `;
-        document.getElementById('premium-logout-btn').addEventListener('click', () => {
-            clearPremiumSession();
-            refreshSubscriptionUI();
-            renderCuratedRepos();
-            showToast('Premium oturumu kapatıldı.');
-        });
+        if (isElectron) {
+            elements.premiumStatusSection.innerHTML = `
+                <div class="api-status-badge active" style="margin-bottom: 0; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <span class="status-dot"></span>
+                    <span>Masaüstü Sürümü — Sınırsız &amp; Ücretsiz</span>
+                </div>
+            `;
+            if (elements.premiumActivationSection) {
+                elements.premiumActivationSection.style.display = 'none';
+            }
+        } else {
+            elements.premiumStatusSection.innerHTML = `
+                <div class="api-status-badge active" style="margin-bottom: 0;">
+                    <span class="status-dot"></span>
+                    <span>Premium erişim aktif${state.premiumEmail ? ` — ${escapeHtml(state.premiumEmail)}` : ''}</span>
+                </div>
+                <button id="premium-logout-btn" class="secondary-btn" style="margin-top: 1rem; width: 100%;">
+                    Premium Çıkış Yap
+                </button>
+            `;
+            if (elements.premiumActivationSection) {
+                elements.premiumActivationSection.style.display = 'none';
+            }
+            document.getElementById('premium-logout-btn').addEventListener('click', () => {
+                clearPremiumSession();
+                refreshSubscriptionUI();
+                renderCuratedRepos();
+                showToast('Premium oturumu kapatıldı.');
+            });
+        }
     } else {
         elements.premiumStatusSection.innerHTML = `
             <button id="open-pay-modal-btn" class="primary-btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
                 💳 Hemen Abone Ol (99 TL)
             </button>
         `;
+        if (elements.premiumActivationSection) {
+            elements.premiumActivationSection.style.display = 'block';
+        }
         // Re-bind click event
         document.getElementById('open-pay-modal-btn').addEventListener('click', openPaymentModal);
     }
@@ -845,6 +940,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         generateDefaultInstructions,
         validatePremiumLogin,
         escapeHtml,
+        fetchWeeklyPopularRepos,
         state
     };
 }

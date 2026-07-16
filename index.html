@@ -31,6 +31,9 @@
                 <button type="button" class="nav-tab" id="tab-live" data-target="panel-live">
                     <span class="tab-icon">🔍</span> Canlı Arama &amp; Link
                 </button>
+                <button type="button" class="nav-tab" id="tab-weekly" data-target="panel-weekly">
+                    <span class="tab-icon">🔥</span> Haftalık Popüler 100
+                </button>
                 <button type="button" class="nav-tab" id="tab-settings" data-target="panel-settings">
                     <span class="tab-icon">⚙️</span> Gemini API
                 </button>
@@ -110,6 +113,26 @@
                 </div>
             </section>
 
+            <!-- PANEL: Weekly Popular (Haftalık Popüler 100) -->
+            <section class="content-panel" id="panel-weekly">
+                <div class="panel-header">
+                    <h2>🔥 Haftanın En Popüler 100 GitHub Projesi</h2>
+                    <p>Son 7 gün içinde oluşturulmuş ve GitHub üzerinde en çok yıldız alan popüler açık kaynaklı projelerin gerçek zamanlı listesi.</p>
+                </div>
+
+                <!-- Weekly Results Area -->
+                <div class="live-results-container">
+                    <div class="status-indicator" id="weekly-status" style="display: none;">
+                        <span class="spinner"></span>
+                        <span class="status-text">GitHub'dan en popüler 100 proje yükleniyor...</span>
+                    </div>
+
+                    <div class="repos-grid" id="weekly-grid">
+                        <!-- Weekly repos will be populated by JS -->
+                    </div>
+                </div>
+            </section>
+
             <!-- PANEL 3: Settings (Gemini API Ayarları) -->
             <section class="content-panel" id="panel-settings">
                 <div class="panel-header">
@@ -170,7 +193,7 @@
                         </button>
                     </div>
 
-                    <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
+                    <div id="premium-activation-section" style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
                         <h4 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.5rem;">Lisans Anahtarı ile Aktifleştir</h4>
                         <div class="search-input-wrapper" style="margin-bottom: 0.5rem;">
                             <input type="text" id="license-key-input" placeholder="Satın aldığınız lisans anahtarını girin (Örn: GTR-12345)..." style="padding-left: 1rem;">

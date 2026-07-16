@@ -7,7 +7,7 @@ module.exports = [
     },
     eslint.configs.recommended,
     {
-        files: ['eslint.config.js'],
+        files: ['eslint.config.js', 'main.js'],
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'commonjs',

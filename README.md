@@ -11,6 +11,8 @@ GitTürkçe, GitHub üzerinde yayınlanan ve yazılımcıların/öğrencilerin i
 5. **Kurulum ve İndirme Paneli:** Beğenilen projeleri ZIP olarak indirme butonu ve projenin diline göre otomatik üretilen terminal kurulum komutları (kopyalama özellikli).
 6. **Responsive Tasarım:** Telefon, tablet ve bilgisayarlardan kolayca erişilebilir, göz yormayan premium karanlık tema (Dark Mode) ve glassmorphism görsel stili.
 7. **Premium Demo Girişi:** Form doğrulaması, hatalı giriş geri bildirimi, kalıcı demo oturumu ve güvenli çıkış akışı. Demo hesap: `premium@gitturkce.com` / `premium123`.
+8. **Haftanın En Popüler 100 GitHub Projesi:** Son 7 günde oluşturulmuş ve en yüksek yıldız almış projeleri GitHub API üzerinden gerçek zamanlı çekip listeleyen yeni sekme.
+9. **macOS Masaüstü Uygulaması (Electron):** Web sürümündeki premium kilitleri devre dışı bırakan, tüm özellikleri sınırsız ve ücretsiz sunan masaüstü sürümü.
 
 > **Not:** Premium giriş, ödeme ve lisans özellikleri bu statik sürümde tanıtım amaçlıdır. Gerçek üyelik, ödeme ve yetkilendirme için sunucu tarafı kimlik doğrulama ve ödeme sağlayıcısı entegrasyonu gerekir.
 
@@ -20,18 +22,31 @@ GitTürkçe, GitHub üzerinde yayınlanan ve yazılımcıların/öğrencilerin i
 
 Uygulama herhangi bir sunucu veya derleme adımı gerektirmeden doğrudan tarayıcıda çalışabilir.
 
-### Yerel Olarak Çalıştırma:
-1. Depoyu klonlayın:
+### Yerel Olarak Çalıştırma (Web):
+1. Depoyu klonlayın ve klasöre girin:
    ```bash
    git clone https://github.com/owner/repo-name.git
    cd repo-name
    ```
-2. Tarayıcınızda `index.html` dosyasını çift tıklayarak doğrudan açın VEYA yerel bir geliştirme sunucusu başlatın:
+2. Bağımlılıkları kurun:
    ```bash
-   # Python ile hızlı sunucu başlatmak için:
+   npm install
+   ```
+3. Tarayıcınızda `index.html` dosyasını doğrudan açın VEYA yerel geliştirme sunucusu başlatın:
+   ```bash
    python3 -m http.server 8000
    ```
-   Ardından tarayıcınızdan `http://localhost:8000` adresine gidin.
+
+### Masaüstü (macOS) Uygulaması Olarak Çalıştırma:
+1. Geliştirme modunda başlatın:
+   ```bash
+   npm start
+   ```
+2. macOS uygulaması (.app) olarak paketleyin:
+   ```bash
+   npm run build:mac
+   ```
+   Paketlenen uygulama `dist/` klasörü altına kaydedilecektir.
 
 ---
 
@@ -54,6 +69,12 @@ Testleri çalıştırmak için:
 ---
 
 ## 📜 Değişiklik Günlüğü (Changelog)
+
+### 2026-07-16
+- macOS (Electron) masaüstü sürümü geçişi tamamlandı.
+- Masaüstü modunda premium üyelik ve kilit sistemini devre dışı bırakan entegrasyon yapıldı.
+- Son 7 günün en popüler 100 projesini gerçek zamanlı getiren "Haftalık Popüler 100" sekmesi eklendi.
+- API çağrıları için Jest birim testleri eklendi ve tüm kalite kontrolleri başarıyla tamamlandı.
 
 ### 2026-07-02
 - Premium demo üye girişi, doğrulama, oturum durumu ve çıkış akışı tamamlandı.

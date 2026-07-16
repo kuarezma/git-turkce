@@ -1,8 +1,10 @@
 {
   "name": "valiant-bose",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
+    "build:mac": "electron-packager . GitTurkce --platform=darwin --arch=universal --out=dist/ --overwrite",
     "lint": "eslint .",
     "test": "jest",
     "validate:html": "html-validate index.html"
@@ -13,6 +15,8 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "electron": "^41.7.1",
+    "electron-packager": "^17.1.2",
     "eslint": "^10.6.0",
     "globals": "^17.7.0",
     "html-validate": "^10.17.0",

@@ -2,7 +2,8 @@ const {
     parseGitHubInput,
     generateDefaultInstructions,
     validatePremiumLogin,
-    escapeHtml
+    escapeHtml,
+    fetchWeeklyPopularRepos
 } = require('../app.js');
 
 describe('GitHub Input Parser', () => {
@@ -117,5 +118,37 @@ describe('HTML Escaping', () => {
 
     test('converts non-string values safely', () => {
         expect(escapeHtml(42)).toBe('42');
+    });
+});
+
+describe('Weekly Popular Repositories API', () => {
+    let originalFetch;
+
+    beforeAll(() => {
+        originalFetch = global.fetch;
+    });
+
+    afterAll(() => {
+        global.fetch = originalFetch;
+    });
+
+    test('should fetch and return weekly popular repositories', async () => {
+        const mockRepos = [
+            { name: 'repo1', stars: 100, language: 'JS' },
+            { name: 'repo2', stars: 50, language: 'Python' }
+        ];
+
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({ items: mockRepos })
+            })
+        );
+
+        const result = await fetchWeeklyPopularRepos();
+        expect(result).toEqual(mockRepos);
+        expect(global.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('https://api.github.com/search/repositories')
+        );
     });
 });
