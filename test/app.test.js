@@ -3,7 +3,8 @@ const {
     generateDefaultInstructions,
     validatePremiumLogin,
     escapeHtml,
-    fetchWeeklyPopularRepos
+    fetchWeeklyPopularRepos,
+    fetchMostStarredRepos
 } = require('../app.js');
 
 describe('GitHub Input Parser', () => {
@@ -149,6 +150,26 @@ describe('Weekly Popular Repositories API', () => {
         expect(result).toEqual(mockRepos);
         expect(global.fetch).toHaveBeenCalledWith(
             expect.stringContaining('https://api.github.com/search/repositories')
+        );
+    });
+
+    test('should fetch and return top 100 most starred repositories', async () => {
+        const mockRepos = [
+            { name: 'repo-star-1', stars: 50000, language: 'Go' },
+            { name: 'repo-star-2', stars: 45000, language: 'Rust' }
+        ];
+
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({ items: mockRepos })
+            })
+        );
+
+        const result = await fetchMostStarredRepos();
+        expect(result).toEqual(mockRepos);
+        expect(global.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('https://api.github.com/search/repositories?q=stars')
         );
     });
 });

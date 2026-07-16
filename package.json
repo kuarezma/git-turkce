@@ -4,7 +4,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build:mac": "electron-packager . GitTurkce --platform=darwin --arch=universal --out=dist/ --overwrite",
+    "build:mac": "electron-packager . GitTurkce --platform=darwin --arch=universal --out=dist/ --overwrite --icon=icon.icns",
     "lint": "eslint .",
     "test": "jest",
     "validate:html": "html-validate index.html"
@@ -21,5 +21,10 @@
     "globals": "^17.7.0",
     "html-validate": "^10.17.0",
     "jest": "^30.4.2"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
   }
 }

@@ -86,7 +86,8 @@ const CURATED_REPOSITORIES = [
     "howToUse": "# 1. Projeyi klonlayın:\ngit clone https://github.com/openclaw/openclaw.git\ncd openclaw\n\n# 2. Bağımlılıkları yükleyin:\nnpm install\n\n# 3. Uygulamayı başlatın:\nnpm run dev",
     "tags": [
       "Yapay Zeka",
-      "Web Geliştirme"
+      "Web Geliştirme",
+      "Agent"
     ],
     "githubUrl": "https://github.com/openclaw/openclaw"
   },
@@ -327,7 +328,7 @@ const CURATED_REPOSITORIES = [
     "whyUseful": "Bu araç Python ekosisteminde geliştiricilerin işlerini kolaylaştırmayı ve süreçleri hızlandırmayı amaçlayan 200.7k yıldızlı son derece popüler açık kaynaklı bir projedir.",
     "howToUse": "# 1. Projeyi klonlayın:\ngit clone https://github.com/NousResearch/hermes-agent.git\ncd hermes-agent\n\n# 2. Bağımlılıkları kurun:\npip install -r requirements.txt\n\n# 3. Çalıştırın:\npython main.py",
     "tags": [
-      "Araçlar"
+      "Agent"
     ],
     "githubUrl": "https://github.com/NousResearch/hermes-agent"
   },
@@ -435,7 +436,7 @@ const CURATED_REPOSITORIES = [
     "howToUse": "# 1. Projeyi klonlayın:\ngit clone https://github.com/Significant-Gravitas/AutoGPT.git\ncd AutoGPT\n\n# 2. Bağımlılıkları kurun:\npip install -r requirements.txt\n\n# 3. Çalıştırın:\npython main.py",
     "tags": [
       "Yapay Zeka",
-      "Araçlar"
+      "Agent"
     ],
     "githubUrl": "https://github.com/Significant-Gravitas/AutoGPT"
   },
@@ -495,7 +496,8 @@ const CURATED_REPOSITORIES = [
     "whyUseful": "Bu araç Kod ekosisteminde geliştiricilerin işlerini kolaylaştırmayı ve süreçleri hızlandırmayı amaçlayan 180.9k yıldızlı son derece popüler açık kaynaklı bir projedir.",
     "howToUse": "# Projeyi klonlayın:\ngit clone https://github.com/multica-ai/andrej-karpathy-skills.git\ncd andrej-karpathy-skills",
     "tags": [
-      "Yapay Zeka"
+      "Yapay Zeka",
+      "Skills"
     ],
     "githubUrl": "https://github.com/multica-ai/andrej-karpathy-skills"
   },
@@ -754,7 +756,7 @@ const CURATED_REPOSITORIES = [
     "whyUseful": "Bu araç Python ekosisteminde geliştiricilerin işlerini kolaylaştırmayı ve süreçleri hızlandırmayı amaçlayan 154.3k yıldızlı son derece popüler açık kaynaklı bir projedir.",
     "howToUse": "# 1. Projeyi klonlayın:\ngit clone https://github.com/anthropics/skills.git\ncd skills\n\n# 2. Bağımlılıkları kurun:\npip install -r requirements.txt\n\n# 3. Çalıştırın:\npython main.py",
     "tags": [
-      "Araçlar"
+      "Skills"
     ],
     "githubUrl": "https://github.com/anthropics/skills"
   },

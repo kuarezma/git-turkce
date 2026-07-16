@@ -31,9 +31,6 @@
                 <button type="button" class="nav-tab" id="tab-live" data-target="panel-live">
                     <span class="tab-icon">🔍</span> Canlı Arama &amp; Link
                 </button>
-                <button type="button" class="nav-tab" id="tab-weekly" data-target="panel-weekly">
-                    <span class="tab-icon">🔥</span> Haftalık Popüler 100
-                </button>
                 <button type="button" class="nav-tab" id="tab-settings" data-target="panel-settings">
                     <span class="tab-icon">⚙️</span> Gemini API
                 </button>
@@ -53,9 +50,12 @@
                     <p>Geliştiricilerin işine en çok yarayan popüler açık kaynaklı projelerin Türkçe incelemeleri ve kurulum yolları.</p>
                 </div>
 
-                <!-- Categories filter -->
                 <div class="category-filters">
                     <button type="button" class="filter-btn active" data-category="all">Hepsi</button>
+                    <button type="button" class="filter-btn" data-category="Agent">🤖 Ajanlar (Agent)</button>
+                    <button type="button" class="filter-btn" data-category="Skills">🧩 Yetenekler (Skills)</button>
+                    <button type="button" class="filter-btn" data-category="weekly">🔥 Haftalık Popüler 100</button>
+                    <button type="button" class="filter-btn" data-category="starred">⭐ En Çok Yıldız Alan 100</button>
                     <button type="button" class="filter-btn" data-category="Yapay Zeka">🧠 Yapay Zeka</button>
                     <button type="button" class="filter-btn" data-category="Web Geliştirme">🌐 Web Geliştirme</button>
                     <button type="button" class="filter-btn" data-category="Mobil &amp; Masaüstü">📱 Mobil &amp; Masaüstü</button>
@@ -113,25 +113,7 @@
                 </div>
             </section>
 
-            <!-- PANEL: Weekly Popular (Haftalık Popüler 100) -->
-            <section class="content-panel" id="panel-weekly">
-                <div class="panel-header">
-                    <h2>🔥 Haftanın En Popüler 100 GitHub Projesi</h2>
-                    <p>Son 7 gün içinde oluşturulmuş ve GitHub üzerinde en çok yıldız alan popüler açık kaynaklı projelerin gerçek zamanlı listesi.</p>
-                </div>
 
-                <!-- Weekly Results Area -->
-                <div class="live-results-container">
-                    <div class="status-indicator" id="weekly-status" style="display: none;">
-                        <span class="spinner"></span>
-                        <span class="status-text">GitHub'dan en popüler 100 proje yükleniyor...</span>
-                    </div>
-
-                    <div class="repos-grid" id="weekly-grid">
-                        <!-- Weekly repos will be populated by JS -->
-                    </div>
-                </div>
-            </section>
 
             <!-- PANEL 3: Settings (Gemini API Ayarları) -->
             <section class="content-panel" id="panel-settings">
@@ -267,6 +249,11 @@
                 <div class="detail-section">
                     <h4>❓ Neden Yararlı / Hangi Problemi Çözer?</h4>
                     <p id="modal-why-useful">Yükleniyor...</p>
+                </div>
+
+                <div class="detail-section">
+                    <h4>🎓 Yeni Başlayanlar İçin Detaylı Açıklama &amp; Örnekler</h4>
+                    <p id="modal-beginner-explanation" style="line-height: 1.6; color: var(--text-main);">Yükleniyor...</p>
                 </div>
 
                 <div class="detail-section">

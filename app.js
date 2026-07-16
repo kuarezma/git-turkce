@@ -47,10 +47,6 @@ const elements = typeof document !== 'undefined' ? {
     liveStatus: document.getElementById('live-status'),
     searchEmptyState: document.getElementById('search-empty-state'),
     
-    // Weekly Popular
-    weeklyGrid: document.getElementById('weekly-grid'),
-    weeklyStatus: document.getElementById('weekly-status'),
-    
     // Settings
     geminiKeyInput: document.getElementById('gemini-key'),
     saveSettingsBtn: document.getElementById('save-settings-btn'),
@@ -68,6 +64,7 @@ const elements = typeof document !== 'undefined' ? {
     modalRepoLink: document.getElementById('modal-repo-link'),
     modalTrSummary: document.getElementById('modal-tr-summary'),
     modalWhyUseful: document.getElementById('modal-why-useful'),
+    modalBeginnerExplanation: document.getElementById('modal-beginner-explanation'),
     modalHowToUse: document.getElementById('modal-how-to-use'),
     modalDownloadZip: document.getElementById('modal-download-zip'),
     modalEnDesc: document.getElementById('modal-en-desc'),
@@ -137,10 +134,6 @@ function initTabs() {
             tab.classList.add('active');
             document.getElementById(target).classList.add('active');
             state.activeTab = target;
-
-            if (target === 'panel-weekly') {
-                loadWeeklyRepos();
-            }
         });
     });
 }
@@ -186,19 +179,86 @@ function updateApiStatusBadge(isActive) {
 }
 
 // 3. Curated Repositories Rendering & Filtering
-function renderCuratedRepos() {
+async function renderCuratedRepos() {
     elements.curatedGrid.innerHTML = '';
     
+    if (state.curatedFilter === 'weekly') {
+        elements.curatedGrid.innerHTML = `
+            <div class="status-indicator" style="display: flex; grid-column: 1 / -1; justify-content: center; padding: 2rem;">
+                <span class="spinner"></span>
+                <span class="status-text">GitHub'dan bu haftanın en popüler 100 projesi yükleniyor...</span>
+            </div>
+        `;
+        try {
+            const repos = await fetchWeeklyPopularRepos();
+            elements.curatedGrid.innerHTML = '';
+            if (repos && repos.length > 0) {
+                repos.forEach((repo, idx) => {
+                    const isLocked = !state.isSubscribed && idx > 2;
+                    const card = createRepoCard(repo, false, isLocked);
+                    elements.curatedGrid.appendChild(card);
+                });
+            } else {
+                showCuratedEmptyState('Sonuç Bulunamadı', 'Bu haftanın popüler projeleri çekilemedi.');
+            }
+        } catch (e) {
+            console.error(e);
+            showCuratedEmptyState('Hata Oluştu', 'Proje verileri çekilirken bir hata ile karşılaşıldı.');
+        }
+        return;
+    }
+
+    if (state.curatedFilter === 'starred') {
+        elements.curatedGrid.innerHTML = `
+            <div class="status-indicator" style="display: flex; grid-column: 1 / -1; justify-content: center; padding: 2rem;">
+                <span class="spinner"></span>
+                <span class="status-text">GitHub'dan en çok yıldız alan 100 proje yükleniyor...</span>
+            </div>
+        `;
+        try {
+            const repos = await fetchMostStarredRepos();
+            elements.curatedGrid.innerHTML = '';
+            if (repos && repos.length > 0) {
+                repos.forEach((repo, idx) => {
+                    const isLocked = !state.isSubscribed && idx > 2;
+                    const card = createRepoCard(repo, false, isLocked);
+                    elements.curatedGrid.appendChild(card);
+                });
+            } else {
+                showCuratedEmptyState('Sonuç Bulunamadı', 'En çok yıldız alan projeler çekilemedi.');
+            }
+        } catch (e) {
+            console.error(e);
+            showCuratedEmptyState('Hata Oluştu', 'Proje verileri çekilirken bir hata ile karşılaşıldı.');
+        }
+        return;
+    }
+
     const filteredRepos = state.curatedFilter === 'all' 
         ? CURATED_REPOSITORIES 
         : CURATED_REPOSITORIES.filter(repo => repo.tags.includes(state.curatedFilter));
         
+    if (filteredRepos.length === 0) {
+        showCuratedEmptyState('Kategori Boş', 'Bu kategoride henüz küratörlü proje bulunmuyor.');
+        return;
+    }
+
     filteredRepos.forEach((repo, idx) => {
         // Lock every item after index 2 if they are not subscribed
         const isLocked = !state.isSubscribed && idx > 2;
         const card = createRepoCard(repo, true, isLocked);
         elements.curatedGrid.appendChild(card);
     });
+}
+
+function showCuratedEmptyState(title, desc) {
+    elements.curatedGrid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1; width: 100%;">
+            <span class="empty-icon">⚠️</span>
+            <h3>${title}</h3>
+            <p>${desc}</p>
+        </div>
+    `;
 }
 
 function initFilters() {
@@ -413,46 +473,24 @@ async function fetchWeeklyPopularRepos() {
     return items;
 }
 
-// UI: Load Weekly Popular Repositories
-async function loadWeeklyRepos() {
-    if (!elements.weeklyGrid) return;
-    
-    // UI state loading
-    elements.weeklyGrid.innerHTML = '';
-    elements.weeklyStatus.style.display = 'flex';
-    
-    try {
-        const repos = await fetchWeeklyPopularRepos();
-        elements.weeklyStatus.style.display = 'none';
-        
-        if (repos && repos.length > 0) {
-            repos.forEach((repo, idx) => {
-                // If not subscribed, lock items after index 2
-                const isLocked = !state.isSubscribed && idx > 2;
-                const card = createRepoCard(repo, false, isLocked);
-                elements.weeklyGrid.appendChild(card);
-            });
-        } else {
-            elements.weeklyGrid.innerHTML = `
-                <div class="empty-state">
-                    <span class="empty-icon">⚠️</span>
-                    <h3>Sonuç Bulunamadı</h3>
-                    <p>Bu haftanın popüler projeleri çekilemedi. Lütfen daha sonra tekrar deneyin.</p>
-                </div>
-            `;
-        }
-    } catch (error) {
-        elements.weeklyStatus.style.display = 'none';
-        elements.weeklyGrid.innerHTML = `
-            <div class="empty-state">
-                <span class="empty-icon">⚠️</span>
-                <h3>Hata Oluştu</h3>
-                <p>GitHub API sınırına ulaşılmış veya bağlantı sorunu yaşıyor olabilirsiniz.</p>
-            </div>
-        `;
-        console.error(error);
+// GitHub API: Fetch Most Starred Repositories (Top 100)
+async function fetchMostStarredRepos() {
+    const cacheKey = 'most_starred_repos';
+    if (state.searchCache[cacheKey]) {
+        return state.searchCache[cacheKey];
     }
+    
+    const res = await fetch(`https://api.github.com/search/repositories?q=stars:>10000&sort=stars&order=desc&per_page=100`);
+    if (!res.ok) throw new Error('GitHub API Error');
+    const data = await res.json();
+    const items = data.items || [];
+    
+    // Save to Cache
+    saveToSearchCache(cacheKey, items);
+    return items;
 }
+
+
 
 function saveToSearchCache(key, value) {
     state.searchCache[key] = value;
@@ -492,6 +530,7 @@ async function translateAndSummarize(repo) {
             turkishTitle: repo.name.charAt(0).toUpperCase() + repo.name.slice(1) + " Kütüphanesi",
             turkishSummary: translatedSummary,
             whyUseful: `Bu araç ${lang} ekosisteminde geliştiricilerin işlerini kolaylaştırmayı ve süreçleri hızlandırmayı amaçlayan açık kaynaklı bir kütüphanedir.`,
+            beginnerExplanation: `Bu araç, ${lang} dili kullanılarak yazılmıştır. Yazılım geliştirirken tekerleği yeniden icat etmemek adına hazır kolaylıklar ve işlevler sunar.\n\n**Örnek:** Tıpkı hazır bir yapboz parçası gibi, bu kütüphane de projenize doğrudan takılarak belirli özellikleri (veri çekme, arayüz oluşturma vb.) anında çalışır hale getirir.`,
             howToUse: setupInstructions + "\n\n# 💡 Daha detaylı yapay zeka analizleri için Ayarlar sekmesinden ücretsiz Gemini API anahtarınızı ekleyin!"
         };
     } catch (error) {
@@ -500,6 +539,7 @@ async function translateAndSummarize(repo) {
             turkishTitle: repo.name + " Projesi",
             turkishSummary: `İngilizce Açıklama: ${originalDesc} (Çeviri hatası oluştu)`,
             whyUseful: "Bu projenin Türkçe açıklaması oluşturulamadı. Detaylar için orijinal İngilizce açıklamaya bakabilirsiniz.",
+            beginnerExplanation: "Bu projenin detaylı Türkçe açıklaması teknik bir hatadan ötürü oluşturulamadı.",
             howToUse: generateDefaultInstructions(repo.name, repo.owner.login || repo.owner, repo.language)
         };
     }
@@ -515,6 +555,7 @@ Expected JSON Structure:
   "turkishTitle": "Short, catchy Turkish title (2-5 words)",
   "turkishSummary": "A simplified, easy-to-understand explanation of what the tool is in Turkish (2-3 sentences)",
   "whyUseful": "Explanation of why this tool is useful, who needs it, and the value it adds (2-3 sentences in Turkish)",
+  "beginnerExplanation": "A very detailed, simple explanation (written for an absolute beginner with zero coding background) explaining what the project does, what problem it solves, and a simple real-world analogy or example in Turkish (3-4 sentences)",
   "howToUse": "Step-by-step setup and run commands with explanations in Turkish"
 }
 
@@ -631,6 +672,7 @@ async function openRepoDetail(repo, isCurated) {
     elements.modalRepoTrTitle.textContent = 'Yapay Zeka Analiz Ediyor...';
     elements.modalTrSummary.textContent = 'Açıklamalar Türkçeye çevriliyor ve analiz ediliyor...';
     elements.modalWhyUseful.textContent = 'Analiz ediliyor...';
+    elements.modalBeginnerExplanation.textContent = 'Analiz ediliyor...';
     elements.modalHowToUse.textContent = '# Yükleniyor...';
     
     // Open Modal
@@ -644,6 +686,7 @@ async function openRepoDetail(repo, isCurated) {
         elements.modalRepoTrTitle.textContent = repo.turkishTitle;
         elements.modalTrSummary.textContent = repo.turkishSummary;
         elements.modalWhyUseful.textContent = repo.whyUseful;
+        elements.modalBeginnerExplanation.innerHTML = repo.beginnerExplanation || getCuratedFallbackBeginnerExplanation(repo);
         elements.modalHowToUse.textContent = repo.howToUse;
     } else {
         // Live data: needs API translation
@@ -652,8 +695,25 @@ async function openRepoDetail(repo, isCurated) {
         elements.modalRepoTrTitle.textContent = aiData.turkishTitle;
         elements.modalTrSummary.textContent = aiData.turkishSummary;
         elements.modalWhyUseful.textContent = aiData.whyUseful;
+        elements.modalBeginnerExplanation.innerHTML = aiData.beginnerExplanation || getCuratedFallbackBeginnerExplanation(repo);
         elements.modalHowToUse.textContent = aiData.howToUse;
     }
+}
+
+function getCuratedFallbackBeginnerExplanation(repo) {
+    const lang = repo.language || 'yazılım dili';
+    const name = repo.name;
+    
+    // Customize explanations based on some curated keys to make it extremely premium and clear
+    if (name === 'build-your-own-x') {
+        return `Bu proje, yazılımcıların kullandığı popüler teknolojileri (örn: kendi veritabanını, kendi oyununu veya tarayıcısını) sıfırdan adım adım nasıl yazacaklarını gösteren devasa bir rehberdir.<br><br><strong>Örnek:</strong> Tıpkı bir aşçılık okulunda sadece hazır yemek tariflerini okumak yerine, ekmek mayalamaktan peynir yapımına kadar her şeyi sıfırdan öğrenip kendi mutfak imparatorluğunu kurmak gibidir.`;
+    } else if (name === 'ollama') {
+        return `Ollama, bilgisayarınıza internete bağlı olmadan, tamamen yerel olarak çalışabilen yapay zeka modelleri (ChatGPT benzeri zekalar) kurmanızı sağlayan bir köprüdür.<br><br><strong>Örnek:</strong> Telefonunuza veya bilgisayarınıza bir oyun yükleyip internetiniz kapalıyken bile oynamak gibi, yapay zekayı da tamamen kendi cihazınıza indirip internet bağımsız konuşabilmenizi sağlar.`;
+    } else if (name === 'openclaw') {
+        return `Bu proje, bilgisayarınızda veya sunucunuzda kendi kişisel yapay zeka asistanınızı (sizin adınıza görevleri yürüten otonom yardımcı) kurmanızı sağlar.<br><br><strong>Örnek:</strong> Kendinize özel, tüm şifreleri ve dosyaları kendi bilgisayarınızda saklayan, sadece size hizmet eden dijital bir özel sekreter işe almak gibidir.`;
+    }
+    
+    return `Bu araç, <strong>${escapeHtml(lang)}</strong> dili kullanılarak yazılmıştır. Kod dünyasında geliştiricilerin sıfırdan her şeyi yazmasını önlemek için hazır kolaylıklar ve işlevler sağlar.<br><br><strong>Örnek Analoji:</strong> Tıpkı hazır bir yapboz parçası gibi, bu kütüphane de projenize doğrudan takılarak belirli özellikleri (veri analizi, arayüz veya yapay zeka entegrasyonu vb.) anında çalışır hale getirir.`;
 }
 
 function closeModal() {
@@ -941,6 +1001,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         validatePremiumLogin,
         escapeHtml,
         fetchWeeklyPopularRepos,
+        fetchMostStarredRepos,
         state
     };
 }
