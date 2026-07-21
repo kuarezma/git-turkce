@@ -319,16 +319,26 @@ body {
 .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.card-header-badges {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .repo-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: var(--text-main);
-    word-break: break-all;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.35;
+    margin-bottom: 0.25rem;
 }
 
 .repo-lang-badge {
@@ -1448,26 +1458,25 @@ a:focus-visible {
 
 /* Bookmark Star on Repo Cards */
 .card-bookmark-star {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-muted);
-    width: 32px;
+    min-width: 32px;
     height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: var(--transition-fast);
-    z-index: 2;
+    flex-shrink: 0;
+    outline: none;
 }
 
 .card-bookmark-star:hover, .card-bookmark-star.active {
     background: #fbbf24;
     color: #000;
     border-color: #fbbf24;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
 }

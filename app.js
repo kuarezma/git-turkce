@@ -459,13 +459,15 @@ function createRepoCard(repo, isCurated, isLocked = false) {
     const bookmarked = isBookmarked(repo);
 
     card.innerHTML = `
-        <div class="card-bookmark-star ${bookmarked ? 'active' : ''}" title="Favorilere Ekle/Çıkar" role="button">
-            ${bookmarked ? '⭐' : '☆'}
-        </div>
         <div class="card-top">
             <div class="card-header">
-                <span class="repo-lang-badge">${escapeHtml(repo.language || 'Kod')}</span>
-                <span class="repo-stars">⭐ ${escapeHtml(repo.stars || repo.stargazers_count || '0')}</span>
+                <div class="card-header-badges">
+                    <span class="repo-lang-badge">${escapeHtml(repo.language || 'Kod')}</span>
+                    <span class="repo-stars">⭐ ${escapeHtml(repo.stars || repo.stargazers_count || '0')}</span>
+                </div>
+                <button type="button" class="card-bookmark-star ${bookmarked ? 'active' : ''}" title="Favorilere Ekle/Çıkar" aria-label="Favori">
+                    ${bookmarked ? '⭐' : '☆'}
+                </button>
             </div>
             <h3 class="repo-title">${escapeHtml(repositoryTitle || 'İsimsiz proje')}</h3>
             <h4 class="repo-tr-title">${escapeHtml(turkishTitle || 'Yazılım Projesi')}</h4>
