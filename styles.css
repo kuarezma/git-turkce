@@ -1329,3 +1329,145 @@ a:focus-visible {
         flex-direction: column;
     }
 }
+
+/* Language Filter Bar */
+.language-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding: 0.75rem 1rem;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+}
+
+.filter-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-right: 0.25rem;
+}
+
+.lang-filter-badge {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.lang-filter-badge:hover {
+    background: rgba(168, 85, 247, 0.15);
+    color: #fff;
+    border-color: rgba(168, 85, 247, 0.4);
+}
+
+.lang-filter-badge.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+}
+
+/* Additional Developer Badges */
+.badge-license {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge-updated {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Quick Action Buttons in Modal */
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.bookmark-action-btn {
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.bookmark-action-btn:hover, .bookmark-action-btn.active {
+    background: #fbbf24;
+    color: #000;
+}
+
+.action-btn.vscode-btn {
+    background: rgba(0, 122, 204, 0.2);
+    border: 1px solid rgba(0, 122, 204, 0.4);
+    color: #38bdf8;
+}
+
+.action-btn.vscode-btn:hover {
+    background: #007acc;
+    color: #fff;
+}
+
+.action-btn.clone-btn {
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    color: #c084fc;
+}
+
+.action-btn.clone-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.action-btn.share-btn {
+    background: rgba(236, 72, 153, 0.15);
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    color: #f472b6;
+}
+
+.action-btn.share-btn:hover {
+    background: var(--secondary);
+    color: #fff;
+}
+
+/* Bookmark Star on Repo Cards */
+.card-bookmark-star {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: var(--transition-fast);
+    z-index: 2;
+}
+
+.card-bookmark-star:hover, .card-bookmark-star.active {
+    background: #fbbf24;
+    color: #000;
+    border-color: #fbbf24;
+}

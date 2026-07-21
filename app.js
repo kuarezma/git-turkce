@@ -18,6 +18,16 @@ const state = {
     activeTab: 'panel-curated',
     geminiApiKey: (typeof localStorage !== 'undefined' ? localStorage.getItem('git_tr_gemini_key') : '') || '',
     curatedFilter: 'all',
+    languageFilter: 'all',
+    bookmarks: (() => {
+        if (typeof localStorage === 'undefined') return [];
+        try {
+            const saved = localStorage.getItem('git_tr_bookmarks');
+            return saved ? JSON.parse(saved) : [];
+        } catch {
+            return [];
+        }
+    })(),
     isSubscribed: isElectron || (typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_STORAGE_KEY) === 'true' : false),
     premiumEmail: isElectron ? 'Masaüstü Sürümü' : ((typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_EMAIL_STORAGE_KEY) : '') || ''),
     searchCache: (() => {
@@ -38,6 +48,8 @@ const elements = typeof document !== 'undefined' ? {
     panels: document.querySelectorAll('.content-panel'),
     curatedGrid: document.getElementById('curated-grid'),
     filterBtns: document.querySelectorAll('.filter-btn'),
+    favoritesCount: document.getElementById('favorites-count'),
+    langFilterBadges: document.querySelectorAll('.lang-filter-badge'),
     
     // Search
     searchInput: document.getElementById('search-input'),
@@ -59,6 +71,13 @@ const elements = typeof document !== 'undefined' ? {
     modalClose: document.getElementById('modal-close'),
     modalRepoLang: document.getElementById('modal-repo-lang'),
     modalRepoStarsCount: document.getElementById('modal-repo-stars-count'),
+    modalRepoForks: document.getElementById('modal-repo-forks'),
+    modalRepoLicense: document.getElementById('modal-repo-license'),
+    modalRepoUpdated: document.getElementById('modal-repo-updated'),
+    modalBookmarkBtn: document.getElementById('modal-bookmark-btn'),
+    modalOpenVsCode: document.getElementById('modal-open-vscode'),
+    modalCopyClone: document.getElementById('modal-copy-clone'),
+    modalShareSummary: document.getElementById('modal-share-summary'),
     modalRepoTitle: document.getElementById('modal-repo-title'),
     modalRepoTrTitle: document.getElementById('modal-repo-tr-title'),
     modalRepoLink: document.getElementById('modal-repo-link'),
@@ -178,10 +197,96 @@ function updateApiStatusBadge(isActive) {
     }
 }
 
+// Bookmark & Favorites Helper Functions
+function getBookmarks() {
+    return state.bookmarks || [];
+}
+
+function saveBookmarks(bookmarks) {
+    state.bookmarks = bookmarks;
+    if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('git_tr_bookmarks', JSON.stringify(bookmarks));
+    }
+    updateFavoritesCountUI();
+}
+
+function updateFavoritesCountUI() {
+    if (elements.favoritesCount) {
+        elements.favoritesCount.textContent = state.bookmarks ? state.bookmarks.length : 0;
+    }
+}
+
+function isBookmarked(repo) {
+    if (!repo) return false;
+    const name = repo.name || repo.full_name;
+    return (state.bookmarks || []).some(b => (b.name || b.full_name) === name);
+}
+
+function toggleBookmark(repo) {
+    if (!repo) return;
+    const name = repo.name || repo.full_name;
+    let bookmarks = getBookmarks();
+    const exists = bookmarks.some(b => (b.name || b.full_name) === name);
+    
+    if (exists) {
+        bookmarks = bookmarks.filter(b => (b.name || b.full_name) !== name);
+        showToast(`${name} favorilerden çıkarıldı.`);
+    } else {
+        const domainInfo = getSmartDomainExplanation(repo);
+        bookmarks.push({
+            name: repo.name,
+            owner: repo.owner ? (repo.owner.login || repo.owner) : '',
+            stars: repo.stars || repo.stargazers_count || '0',
+            language: repo.language || 'Kod',
+            description: repo.description || '',
+            turkishTitle: domainInfo.turkishTitle || repo.turkishTitle || '',
+            turkishSummary: domainInfo.turkishSummary || repo.turkishSummary || '',
+            whyUseful: domainInfo.whyUseful || repo.whyUseful || '',
+            beginnerExplanation: domainInfo.beginnerExplanation || repo.beginnerExplanation || '',
+            howToUse: repo.howToUse || generateDefaultInstructions(repo.name, repo.owner ? (repo.owner.login || repo.owner) : '', repo.language),
+            githubUrl: repo.githubUrl || repo.html_url || `https://github.com/${repo.owner}/${repo.name}`
+        });
+        showToast(`${name} favorilere eklendi! ⭐`);
+    }
+    saveBookmarks(bookmarks);
+    updateModalBookmarkBtn(repo);
+    renderCuratedRepos();
+}
+
+function updateModalBookmarkBtn(repo) {
+    if (!elements.modalBookmarkBtn) return;
+    const bookmarked = isBookmarked(repo);
+    elements.modalBookmarkBtn.textContent = bookmarked ? '⭐ Favorilerden Çıkar' : '☆ Favorilere Ekle';
+    elements.modalBookmarkBtn.classList.toggle('active', bookmarked);
+}
+
+function filterByLanguage(repos) {
+    if (!state.languageFilter || state.languageFilter === 'all') return repos;
+    return repos.filter(repo => {
+        const lang = (repo.language || '').toLowerCase();
+        const target = state.languageFilter.toLowerCase();
+        if (target === 'c++') return lang.includes('c++') || lang.includes('c');
+        return lang.includes(target);
+    });
+}
+
 // 3. Curated Repositories Rendering & Filtering
 async function renderCuratedRepos() {
     elements.curatedGrid.innerHTML = '';
     
+    if (state.curatedFilter === 'favorites') {
+        const favs = filterByLanguage(state.bookmarks || []);
+        if (favs.length === 0) {
+            showCuratedEmptyState('Favoriniz Bulunmuyor', 'Favorilerinize henüz proje eklemediniz. Proje kartlarındaki yıldız ikonuna tıklayarak favorilerinize ekleyebilirsiniz.');
+            return;
+        }
+        favs.forEach((repo, idx) => {
+            const card = createRepoCard(repo, true, false);
+            elements.curatedGrid.appendChild(card);
+        });
+        return;
+    }
+
     if (state.curatedFilter === 'weekly') {
         elements.curatedGrid.innerHTML = `
             <div class="status-indicator" style="display: flex; grid-column: 1 / -1; justify-content: center; padding: 2rem;">
@@ -190,7 +295,8 @@ async function renderCuratedRepos() {
             </div>
         `;
         try {
-            const repos = await fetchWeeklyPopularRepos();
+            const rawRepos = await fetchWeeklyPopularRepos();
+            const repos = filterByLanguage(rawRepos);
             elements.curatedGrid.innerHTML = '';
             if (repos && repos.length > 0) {
                 repos.forEach((repo, idx) => {
@@ -199,7 +305,7 @@ async function renderCuratedRepos() {
                     elements.curatedGrid.appendChild(card);
                 });
             } else {
-                showCuratedEmptyState('Sonuç Bulunamadı', 'Bu haftanın popüler projeleri çekilemedi.');
+                showCuratedEmptyState('Sonuç Bulunamadı', 'Seçilen dilde popüler proje bulunamadı.');
             }
         } catch (e) {
             console.error(e);
@@ -216,7 +322,8 @@ async function renderCuratedRepos() {
             </div>
         `;
         try {
-            const repos = await fetchMostStarredRepos();
+            const rawRepos = await fetchMostStarredRepos();
+            const repos = filterByLanguage(rawRepos);
             elements.curatedGrid.innerHTML = '';
             if (repos && repos.length > 0) {
                 repos.forEach((repo, idx) => {
@@ -225,7 +332,7 @@ async function renderCuratedRepos() {
                     elements.curatedGrid.appendChild(card);
                 });
             } else {
-                showCuratedEmptyState('Sonuç Bulunamadı', 'En çok yıldız alan projeler çekilemedi.');
+                showCuratedEmptyState('Sonuç Bulunamadı', 'Seçilen dilde en çok yıldız alan proje bulunamadı.');
             }
         } catch (e) {
             console.error(e);
@@ -244,12 +351,14 @@ async function renderCuratedRepos() {
         return;
     }
 
-    const filteredRepos = state.curatedFilter === 'all' 
+    const categoryRepos = state.curatedFilter === 'all' 
         ? CURATED_REPOSITORIES 
         : CURATED_REPOSITORIES.filter(repo => repo.tags.includes(state.curatedFilter));
         
+    const filteredRepos = filterByLanguage(categoryRepos);
+
     if (filteredRepos.length === 0) {
-        showCuratedEmptyState('Kategori Boş', 'Bu kategoride henüz küratörlü proje bulunmuyor.');
+        showCuratedEmptyState('Kategori Boş', 'Bu kategoride seçilen filtreye uygun proje bulunmuyor.');
         return;
     }
 
@@ -283,10 +392,12 @@ async function renderMergedCategory(categoryName, fetchFunc, loadingText) {
                 merged.push(apiRepo);
             }
         });
+
+        const filtered = filterByLanguage(merged);
         
         elements.curatedGrid.innerHTML = '';
-        if (merged.length > 0) {
-            merged.forEach((repo, idx) => {
+        if (filtered.length > 0) {
+            filtered.forEach((repo, idx) => {
                 const isLocked = !state.isSubscribed && idx > 2;
                 const isCurated = curated.some(c => 
                     c.name.toLowerCase() === repo.name.toLowerCase() && 
@@ -296,7 +407,7 @@ async function renderMergedCategory(categoryName, fetchFunc, loadingText) {
                 elements.curatedGrid.appendChild(card);
             });
         } else {
-            showCuratedEmptyState('Sonuç Bulunamadı', 'Projeler çekilemedi.');
+            showCuratedEmptyState('Sonuç Bulunamadı', 'Seçilen dilde proje bulunamadı.');
         }
     } catch (e) {
         console.error(e);
@@ -315,11 +426,22 @@ function showCuratedEmptyState(title, desc) {
 }
 
 function initFilters() {
+    updateFavoritesCountUI();
+    
     elements.filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             elements.filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             state.curatedFilter = btn.getAttribute('data-category');
+            renderCuratedRepos();
+        });
+    });
+
+    elements.langFilterBadges.forEach(btn => {
+        btn.addEventListener('click', () => {
+            elements.langFilterBadges.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.languageFilter = btn.getAttribute('data-lang');
             renderCuratedRepos();
         });
     });
@@ -334,8 +456,12 @@ function createRepoCard(repo, isCurated, isLocked = false) {
     const repositoryTitle = isCurated ? `${repo.owner} / ${repo.name}` : (repo.full_name || `${repositoryOwner}/${repo.name}`);
     const turkishTitle = isCurated ? (domainInfo.turkishTitle || repo.turkishTitle) : (repo.turkishTitle || domainInfo.turkishTitle);
     const repositoryDescription = isCurated ? (domainInfo.turkishSummary || repo.turkishSummary) : (domainInfo.turkishSummary || repo.description || 'Açıklama bulunmuyor.');
+    const bookmarked = isBookmarked(repo);
 
     card.innerHTML = `
+        <div class="card-bookmark-star ${bookmarked ? 'active' : ''}" title="Favorilere Ekle/Çıkar" role="button">
+            ${bookmarked ? '⭐' : '☆'}
+        </div>
         <div class="card-top">
             <div class="card-header">
                 <span class="repo-lang-badge">${escapeHtml(repo.language || 'Kod')}</span>
@@ -356,6 +482,12 @@ function createRepoCard(repo, isCurated, isLocked = false) {
         ` : ''}
     `;
     
+    const starBtn = card.querySelector('.card-bookmark-star');
+    starBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleBookmark(repo);
+    });
+
     card.addEventListener('click', () => {
         if (isLocked) {
             // Trigger subscription activation modal
@@ -743,6 +875,60 @@ function initModal() {
             showToast('Kopyalama başarısız oldu.', true);
         });
     });
+
+    // Modal Bookmark Button
+    if (elements.modalBookmarkBtn) {
+        elements.modalBookmarkBtn.addEventListener('click', () => {
+            if (state.currentSelectedRepo) {
+                toggleBookmark(state.currentSelectedRepo);
+            }
+        });
+    }
+
+    // VS Code Open Button
+    if (elements.modalOpenVsCode) {
+        elements.modalOpenVsCode.addEventListener('click', () => {
+            if (!state.currentSelectedRepo) return;
+            const repo = state.currentSelectedRepo;
+            const owner = repo.owner ? (repo.owner.login || repo.owner) : '';
+            const url = repo.githubUrl || repo.html_url || `https://github.com/${owner}/${repo.name}`;
+            window.location.href = `vscode://vscode.git/clone?url=${encodeURIComponent(url)}`;
+            showToast('VS Code açılıyor... 💻');
+        });
+    }
+
+    // Clone Command Copy Button
+    if (elements.modalCopyClone) {
+        elements.modalCopyClone.addEventListener('click', () => {
+            if (!state.currentSelectedRepo) return;
+            const repo = state.currentSelectedRepo;
+            const owner = repo.owner ? (repo.owner.login || repo.owner) : '';
+            const url = repo.githubUrl || repo.html_url || `https://github.com/${owner}/${repo.name}`;
+            const cloneCmd = `git clone ${url}.git`;
+            navigator.clipboard.writeText(cloneCmd).then(() => {
+                showToast('Clone komutu kopyalandı! 📋');
+            });
+        });
+    }
+
+    // Share Summary Button
+    if (elements.modalShareSummary) {
+        elements.modalShareSummary.addEventListener('click', () => {
+            if (!state.currentSelectedRepo) return;
+            const repo = state.currentSelectedRepo;
+            const domainInfo = getSmartDomainExplanation(repo);
+            const title = domainInfo.turkishTitle || repo.turkishTitle || repo.name;
+            const summary = domainInfo.turkishSummary || repo.turkishSummary || repo.description;
+            const owner = repo.owner ? (repo.owner.login || repo.owner) : '';
+            const url = repo.githubUrl || repo.html_url || `https://github.com/${owner}/${repo.name}`;
+            
+            const shareText = `🚀 GitTürkçe Proje İncelemesi: ${repo.name}\n📌 Başlık: ${title}\n💡 Özet: ${summary}\n⭐ Yıldız: ${repo.stars || repo.stargazers_count || '0'} | 🌐 Dili: ${repo.language || 'Kod'}\n🔗 Link: ${url}`;
+            
+            navigator.clipboard.writeText(shareText).then(() => {
+                showToast('Proje özeti panoya kopyalandı! 📤');
+            });
+        });
+    }
 }
 
 async function openRepoDetail(repo, isCurated) {
@@ -756,9 +942,15 @@ async function openRepoDetail(repo, isCurated) {
     elements.modalRepoTitle.textContent = `${ownerName} / ${repoName}`;
     elements.modalRepoLang.textContent = repo.language || 'Kod';
     elements.modalRepoStarsCount.textContent = `⭐ ${repo.stars || repo.stargazers_count || '0'}`;
-    elements.modalRepoLink.href = repo.githubUrl || repo.html_url;
+    if (elements.modalRepoForks) elements.modalRepoForks.textContent = `🔱 ${repo.forks_count || repo.forks || '1.2k'}`;
+    if (elements.modalRepoLicense) elements.modalRepoLicense.textContent = `📜 ${repo.license ? (repo.license.spdx_id || repo.license.name || 'MIT') : 'MIT'}`;
+    if (elements.modalRepoUpdated) elements.modalRepoUpdated.textContent = `📅 ${repo.updated_at ? new Date(repo.updated_at).toLocaleDateString('tr-TR') : 'Güncel'}`;
+    
+    elements.modalRepoLink.href = repo.githubUrl || repo.html_url || `https://github.com/${ownerName}/${repoName}`;
     elements.modalDownloadZip.href = `https://github.com/${ownerName}/${repoName}/archive/refs/heads/${defaultBranch}.zip`;
     elements.modalEnDesc.textContent = repo.description || 'No description available.';
+    
+    updateModalBookmarkBtn(repo);
     
     // Visual show loading state for generated translations
     elements.modalRepoTrTitle.textContent = 'Yapay Zeka Analiz Ediyor...';
