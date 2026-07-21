@@ -3,7 +3,7 @@ const globals = require('globals');
 
 module.exports = [
     {
-        ignores: ['node_modules/**', 'coverage/**']
+        ignores: ['node_modules/**', 'coverage/**', 'dist/**', 'graphify-out/**']
     },
     eslint.configs.recommended,
     {

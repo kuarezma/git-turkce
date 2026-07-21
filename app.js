@@ -280,7 +280,7 @@ async function renderCuratedRepos() {
             showCuratedEmptyState('Favoriniz Bulunmuyor', 'Favorilerinize henüz proje eklemediniz. Proje kartlarındaki yıldız ikonuna tıklayarak favorilerinize ekleyebilirsiniz.');
             return;
         }
-        favs.forEach((repo, idx) => {
+        favs.forEach(repo => {
             const card = createRepoCard(repo, true, false);
             elements.curatedGrid.appendChild(card);
         });
@@ -729,7 +729,6 @@ function saveToSearchCache(key, value) {
 // 5. Translation & AI Summarization Engine
 async function translateAndSummarize(repo) {
     const originalDesc = repo.description || 'No description provided.';
-    const lang = repo.language || 'yazılım dili';
     
     // If Gemini Key is present, run deep analysis
     if (state.geminiApiKey) {
