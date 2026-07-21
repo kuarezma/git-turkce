@@ -6,7 +6,8 @@ const {
     fetchWeeklyPopularRepos,
     fetchMostStarredRepos,
     fetchAgentRepos,
-    fetchSkillsRepos
+    fetchSkillsRepos,
+    getSmartDomainExplanation
 } = require('../app.js');
 
 describe('GitHub Input Parser', () => {
@@ -203,5 +204,33 @@ describe('Weekly Popular Repositories API', () => {
         expect(global.fetch).toHaveBeenCalledWith(
             expect.stringContaining('mcp')
         );
+    });
+});
+
+describe('Repo Specific Turkish Explanations', () => {
+    test('should return rich specific knowledge for curated repo react', () => {
+        const info = getSmartDomainExplanation({ name: 'react', description: 'A JavaScript library for building user interfaces' });
+        expect(info.turkishTitle).toContain('React');
+        expect(info.beginnerExplanation).toContain('Instagram');
+        expect(info.beginnerExplanation).not.toContain('yapboz parçası gibidir');
+    });
+
+    test('should return rich specific knowledge for curated repo yt-dlp', () => {
+        const info = getSmartDomainExplanation({ name: 'yt-dlp', description: 'A youtube-dl fork with additional features' });
+        expect(info.turkishTitle).toContain('Video');
+        expect(info.beginnerExplanation).toContain('MP3');
+        expect(info.beginnerExplanation).not.toContain('tekerleği yeniden icat etmemek');
+    });
+
+    test('should dynamically classify an unknown AI agent repo', () => {
+        const info = getSmartDomainExplanation({ name: 'super-ai-agent', description: 'Autonomous agent framework for multi-step reasoning' });
+        expect(info.turkishTitle).toContain('Yapay Zeka Ajanı');
+        expect(info.beginnerExplanation).toContain('dijital bir asistandır');
+    });
+
+    test('should dynamically classify an unknown database repo', () => {
+        const info = getSmartDomainExplanation({ name: 'fast-kv-db', description: 'Ultra fast key-value database storage engine' });
+        expect(info.turkishTitle).toContain('Veritabanı');
+        expect(info.beginnerExplanation).toContain('dijital kasadır');
     });
 });
