@@ -4,7 +4,7 @@ GitTürkçe, GitHub üzerinde yayınlanan ve yazılımcıların/öğrencilerin i
 
 ## 🚀 Özellikler (Features)
 
-1. **Özenle Seçilmiş Popüler Projeler (Curated Hub):** Yapay Zeka, Web Geliştirme, Mobil/Masaüstü ve Geliştirici Araçları gibi kategorilerde en popüler 12 projenin hazır Türkçe özetleri, kullanım alanları ve kurulum adımları.
+1. **Özenle Seçilmiş Popüler Projeler (Curated Hub):** Yapay Zeka, Web Geliştirme, Mobil/Masaüstü ve Geliştirici Araçları gibi kategorilerde 100 seçkin projenin hazır Türkçe özetleri, kullanım alanları ve kurulum adımları. Ajanlar (Agent) ve Yetenekler (Skills) kategorileri GitHub API'den canlı çekilir.
 2. **Canlı GitHub Arama ve Link Tespiti:** Arama kutusuna yazılan anahtar kelimeleri arar veya doğrudan yapıştırılan bir GitHub linkini (URL) algılayıp detaylarını çeker.
 3. **Akıllı Çeviri Motoru (MyMemory Fallback):** İngilizce açıklamaları ücretsiz ve anahtarsız MyMemory API üzerinden anlık olarak Türkçeye çevirir.
 4. **Gemini Yapay Zeka Entegrasyonu:** Ayarlar sekmesinden eklenebilen ücretsiz bir Gemini API Anahtarı ile projeleri derinlemesine analiz eder; sade bir dille "Nedir?", "Neden Yararlıdır?" ve "Nasıl Başlanır?" adımlarını otonom üretir.
@@ -13,6 +13,11 @@ GitTürkçe, GitHub üzerinde yayınlanan ve yazılımcıların/öğrencilerin i
 7. **Premium Demo Girişi:** Form doğrulaması, hatalı giriş geri bildirimi, kalıcı demo oturumu ve güvenli çıkış akışı. Demo hesap: `premium@gitturkce.com` / `premium123`.
 8. **Haftanın En Popüler 100 GitHub Projesi:** Son 7 günde oluşturulmuş ve en yüksek yıldız almış projeleri GitHub API üzerinden gerçek zamanlı çekip listeleyen yeni sekme.
 9. **macOS Masaüstü Uygulaması (Electron):** Web sürümündeki premium kilitleri devre dışı bırakan, tüm özellikleri sınırsız ve ücretsiz sunan masaüstü sürümü.
+10. **En Çok Yıldız Alan 100 Proje:** Tüm zamanların en çok yıldız alan projelerini GitHub API üzerinden listeleyen sekme.
+11. **Favoriler:** Proje kartından veya detay panelinden favoriye ekleme/çıkarma; favoriler tarayıcıda (`localStorage`) saklanır ve "Favorilerim" filtresinde listelenir.
+12. **Dile Göre Süzme:** Proje listesini programlama diline göre filtreleme.
+13. **Proje Detay Eylemleri:** Depoyu VS Code'da klonlamak için açma, `git clone` komutunu kopyalama ve Türkçe proje özetini paylaşma.
+14. **Projeye Özel Türkçe Açıklamalar:** Bilinen projeler için elle yazılmış, bilinmeyenler için alan tespitiyle (yapay zeka ajanı, veritabanı vb.) üretilen sade Türkçe açıklamalar.
 
 > **Not:** Premium giriş, ödeme ve lisans özellikleri bu statik sürümde tanıtım amaçlıdır. Gerçek üyelik, ödeme ve yetkilendirme için sunucu tarafı kimlik doğrulama ve ödeme sağlayıcısı entegrasyonu gerekir.
 
@@ -80,7 +85,13 @@ Testleri çalıştırmak için:
 
 ## 📜 Değişiklik Günlüğü (Changelog)
 
+### 2026-07-21
+- Favoriler, dile göre süzme, VS Code'da açma, klon komutu kopyalama ve proje özeti paylaşma eklendi.
+- Projeye özel ve alan tespitli Türkçe açıklama motoru eklendi.
+- ESLint `no-unused-vars` uyarıları giderildi; kart başlıkları, kelime kırma ve filtre düzeni responsive olarak düzeltildi.
+
 ### 2026-07-16
+- "Ajanlar" ve "Yetenekler" kategorileri ile "En Çok Yıldız Alan 100" sekmesi eklendi; veriler GitHub API'den canlı çekiliyor.
 - macOS (Electron) masaüstü sürümü geçişi tamamlandı.
 - Masaüstü modunda premium üyelik ve kilit sistemini devre dışı bırakan entegrasyon yapıldı.
 - Son 7 günün en popüler 100 projesini gerçek zamanlı getiren "Haftalık Popüler 100" sekmesi eklendi.
