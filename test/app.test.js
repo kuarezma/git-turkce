@@ -215,14 +215,14 @@ describe('Weekly Popular Repositories API', () => {
 
 describe('Repo Specific Turkish Explanations', () => {
     test('should return rich specific knowledge for curated repo react', () => {
-        const info = getSmartDomainExplanation({ name: 'react', description: 'A JavaScript library for building user interfaces' });
+        const info = getSmartDomainExplanation({ name: 'react', owner: 'react', description: 'A JavaScript library for building user interfaces' });
         expect(info.turkishTitle).toContain('React');
         expect(info.beginnerExplanation).toContain('Instagram');
         expect(info.beginnerExplanation).not.toContain('yapboz parçası gibidir');
     });
 
     test('should return rich specific knowledge for curated repo yt-dlp', () => {
-        const info = getSmartDomainExplanation({ name: 'yt-dlp', description: 'A youtube-dl fork with additional features' });
+        const info = getSmartDomainExplanation({ name: 'yt-dlp', owner: 'yt-dlp', description: 'A youtube-dl fork with additional features' });
         expect(info.turkishTitle).toContain('Video');
         expect(info.beginnerExplanation).toContain('MP3');
         expect(info.beginnerExplanation).not.toContain('tekerleği yeniden icat etmemek');
@@ -483,7 +483,7 @@ describe('Seçkin repo bilgi tablosu (knowledge.js)', () => {
 
     test('her seçkin repo için repoya özel bilgi vardır', () => {
         const missing = curated.filter(repo =>
-            !legacy[repo.name] && !knowledge[`${repo.owner}/${repo.name}`.toLowerCase()]
+            !legacy[`${repo.owner}/${repo.name}`.toLowerCase()] && !knowledge[`${repo.owner}/${repo.name}`.toLowerCase()]
         );
         expect(missing.map(repo => `${repo.owner}/${repo.name}`)).toEqual([]);
     });
@@ -655,9 +655,15 @@ describe('Repository explanations from source data', () => {
         expect(findSpecificKnowledge({ owner: 'example', name: 'react' })).toBe(knowledge);
     });
 
-    test('falls back to legacy repo knowledge', () => {
+    test('falls back to legacy repo knowledge by owner/name', () => {
         delete global.REPO_KNOWLEDGE;
-        expect(findSpecificKnowledge({ name: 'react' })).toBe(REPO_SPECIFIC_KNOWLEDGE.react);
+        expect(findSpecificKnowledge({ owner: 'react', name: 'react' })).toBe(REPO_SPECIFIC_KNOWLEDGE['react/react']);
+    });
+
+    test('does not reuse curated knowledge for a same-named repo from another owner', () => {
+        delete global.REPO_KNOWLEDGE;
+        expect(findSpecificKnowledge({ owner: 'someone-else', name: 'react' })).toBeNull();
+        expect(findSpecificKnowledge({ name: 'react' })).toBeNull();
     });
 
     test('returns null for unknown repositories', () => {
@@ -677,10 +683,10 @@ describe('Repository explanations from source data', () => {
 
     test('returns legacy knowledge without making network requests', async () => {
         global.fetch = jest.fn();
-        const result = await translateAndSummarize({ name: 'react', owner: 'facebook', language: 'JavaScript' });
+        const result = await translateAndSummarize({ name: 'react', owner: 'react', language: 'JavaScript' });
         expect(result).toEqual({
-            ...REPO_SPECIFIC_KNOWLEDGE.react,
-            howToUse: generateDefaultInstructions('react', 'facebook', 'JavaScript')
+            ...REPO_SPECIFIC_KNOWLEDGE['react/react'],
+            howToUse: generateDefaultInstructions('react', 'react', 'JavaScript')
         });
         expect(global.fetch).not.toHaveBeenCalled();
     });

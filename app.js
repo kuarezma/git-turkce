@@ -1077,157 +1077,157 @@ async function openRepoDetail(repo, isCurated) {
 }
 
 const REPO_SPECIFIC_KNOWLEDGE = {
-    "build-your-own-x": {
+    "codecrafters-io/build-your-own-x": {
         turkishTitle: "Kendi Teknolojini Sıfırdan İnşa Et",
         turkishSummary: "Veritabanlarından işletim sistemlerine kadar favori teknolojilerinizi sıfırdan nasıl kodlayacağınızı öğreten devasa bir açık kaynak rehberidir.",
         whyUseful: "Hazır kütüphanelerin arkasındaki çalışma mantığını derinlemesine kavramanızı sağlar ve sizi sıradan bir kod yazardan kıdemli mimara dönüştürür.",
         beginnerExplanation: "Bu proje, yazılımcıların kullandığı popüler teknolojileri (kendi veritabanını, kendi oyun motorunu veya web tarayıcısını) adım adım sıfırdan yazmanızı sağlayan rehberler sunar.<br><br><strong>Gerçekçi Örnek:</strong> Tıpkı bir sürücünün sadece araba sürmeyi değil, motorun her bir pistonunun nasıl çalıştığını öğrenip kendi aracını inşa etmesi gibidir."
     },
-    "awesome": {
+    "sindresorhus/awesome": {
         turkishTitle: "Harika Konu ve Araç Listeleri",
         turkishSummary: "Yazılım dünyasındaki tüm programlama dilleri, teknolojiler ve konular hakkında topluluk tarafından seçilmiş en iyi kaynak ve araç listeleridir.",
         whyUseful: "Yeni bir teknolojiye başlarken kaliteli kütüphane ve eğitim bulma sürecinde saatlerce arama yapma derdine son verir.",
         beginnerExplanation: "Yazılım dünyasındaki her konu (Python, Yapay Zeka, Oyun Geliştirme vb.) için en iyi derslerin, kitapların ve araçların kürasyon yapıldığı ana kütüphanedir.<br><br><strong>Gerçekçi Örnek:</strong> Bir şehre gittiğinizde sadece en iyi restoranları ve gezilecek yerleri gösteren rehber kitapçık gibidir."
     },
-    "freeCodeCamp": {
+    "freecodecamp/freecodecamp": {
         turkishTitle: "Ücretsiz İnteraktif Yazılım Eğitimi",
         turkishSummary: "Sıfırdan web geliştirme, matematik, veri analizi ve bilgisayar bilimi öğrenmenizi sağlayan dünyanın en büyük ücretsiz kodlama platformudur.",
         whyUseful: "Pahalı kurslara veya okullara ihtiyaç duymadan, doğrudan tarayıcı üzerinden interaktif olarak kod yazarak geliştirici olmanıza imkan tanır.",
         beginnerExplanation: "Sıfırdan yazılıma başlamak isteyenler için adım adım dersler, kodlama egzersizleri ve sertifika projeleri sunar.<br><br><strong>Gerçekçi Örnek:</strong> Kodlama derslerini adım adım çözüp, yaptığınız projeler sonucunda uluslararası geçerliliği olan ücretsiz sertifikalar kazanırsınız."
     },
-    "public-apis": {
+    "public-apis/public-apis": {
         turkishTitle: "Ücretsiz Kullanılabilir API Listesi",
         turkishSummary: "Hava durumundan finansal verilere, oyunlardan müzik servislerine kadar geliştiricilerin ücretsiz kullanabileceği harici API servisleri koleksiyonudur.",
         whyUseful: "Kendi projenize canlı hava durumu, döviz kurları veya spor skorları gibi verileri sıfırdan veri toplamadan tek tıkla eklemenizi sağlar.",
         beginnerExplanation: "Uygulamalarınızın dış dünyadan veri çekmesini sağlayan ücretsiz kapıların (API) listesidir.<br><br><strong>Gerçekçi Örnek:</strong> Bir mobil uygulama yaparken canlı hava durumunu göstermek istediğinizde, Meteoroloji'nin sağladığı ücretsiz API adresini bu listeden bulup projenize bağlarsınız."
     },
-    "free-programming-books": {
+    "ebookfoundation/free-programming-books": {
         turkishTitle: "Ücretsiz Programlama Kitapları Rehberi",
         turkishSummary: "Dünyanın dört bir yanından ücretsiz olarak erişilebilen yüzlerce dildeki yazılım kitapları, ders notları ve eğitim videoları arşivdir.",
         whyUseful: "Yazılım öğrenirken pahalı teknik kitaplara bütçe ayırmadan, toplulukça doğrulanmış en güncel kaynaklara yasal ve ücretsiz ulaşmanızı sağlar.",
         beginnerExplanation: "Tüm dünyadaki yazılımcıların bağışladığı ve derlediği devasa bir dijital yazılım kütüphanesidir.<br><br><strong>Gerçekçi Örnek:</strong> Python veya C++ öğrenmek istediğinizde, aradığınız konunun en detaylı Türkçe ve İngilizce kitaplarını PDF veya web sayfası formatında ücretsiz okuyabilirsiniz."
     },
-    "openclaw": {
+    "openclaw/openclaw": {
         turkishTitle: "Kişisel Otonom Yapay Zeka Asistanı",
         turkishSummary: "Tüm işletim sistemlerinde çalışan, kendi sunucunuzda veya bilgisayarınızda kişisel işlerinizi yürüten otonom yapay zeka sistemidir.",
         whyUseful: "Şirket verilerinizi dışarı aktarmadan, kendi kontrolünüz altında çalışan özel bir AI sekreteri oluşturmanızı sağlar.",
         beginnerExplanation: "Bilgisayarınızda çalışan, sizin verdiğiniz görevleri (dosya düzenleme, rapor yazma, e-posta taslağı hazırlama) kendi başına yürüten bir yardımcıdır.<br><br><strong>Gerçekçi Örnek:</strong> 'Masaüstündeki tüm PDF'leri tarihlerine göre klasörle' dediğinizde bu işlemi otomatik olarak gerçekleştiren dijital asistanınızdır."
     },
-    "developer-roadmap": {
+    "nilbuild/developer-roadmap": {
         turkishTitle: "Yazılımcı Kariyer Yol Haritaları",
         turkishSummary: "Frontend, Backend, DevOps, AI Engineer gibi alanlarda sırasıyla hangi teknolojilerin öğrenilmesi gerektiğini gösteren görsel haritalardır.",
         whyUseful: "Yazılıma yeni başlayanların hangi teknolojiyi hangi sırayla öğreneceği konusundaki kafa karışıklığını tamamen giderir.",
         beginnerExplanation: "Yazılım dünyasında kaybolmadan hedefinize ulaşmanız için adım adım çizilmiş kariyer haritalarıdır.<br><br><strong>Gerçekçi Örnek:</strong> 'Frontend Geliştirici olmak istiyorum' dediğinizde; önce HTML, sonra CSS, ardından JavaScript ve React öğrenmeniz gerektiğini adım adım işaret eder."
     },
-    "system-design-primer": {
+    "donnemartin/system-design-primer": {
         turkishTitle: "Sistem Tasarımı ve Mimari Rehberi",
         turkishSummary: "Milyonlarca kullanıcılı ölçeklenebilir sistemlerin (YouTube, WhatsApp, Twitter vb.) nasıl tasarlanacağını anlatan rehberdir.",
         whyUseful: "Yazılım mülakatlarına hazırlanmanızı ve yüksek trafikli sistemlerin arkasındaki sunucu, veritabanı ve yük dengeleme mantıklarını kavramınızı sağlar.",
         beginnerExplanation: "Bir web sitesine aynı anda 100 bin kişi girdiğinde sunucuların çökmemesi için sistemin nasıl kurgulanacağını öğretir.<br><br><strong>Gerçekçi Örnek:</strong> Trendyol Efsane Cuma indirimlerinde milyonlarca kişinin aynı anda alışveriş yapabilmesini sağlayan veritabanı ve sunucu mimarisini tasarlama rehberidir."
     },
-    "coding-interview-university": {
+    "jwasham/coding-interview-university": {
         turkishTitle: "Yazılım Mülakatlarına Hazırlık Rehberi",
         turkishSummary: "Google, Amazon, Meta gibi teknoloji devlerinin teknik mülakatlarını kazanmak için hazırlanan bilgisayar bilimi çalışma planıdır.",
         whyUseful: "Bilgisayar bilimleri mühendisliği müfredatını özetleyerek büyük şirketlerin mülakat sorularına eksiksiz hazırlanmanızı sağlar.",
         beginnerExplanation: "Dünyanın en büyük teknoloji şirketlerinde yazılımcı olarak işe girmek için çalışmanız gereken konuların tam müfredatıdır.<br><br><strong>Gerçekçi Örnek:</strong> Veri yapıları, algoritmalar ve problem çözme tekniklerini adım adım çalışarak teknik mülakatları geçmenize yardımcı olur."
     },
-    "awesome-python": {
+    "vinta/awesome-python": {
         turkishTitle: "Harika Python Kütüphaneleri Koleksiyonu",
         turkishSummary: "Python dilinde geliştirilmiş en başarılı web çerçeveleri, yapay zeka araçları ve veri analizi kütüphaneleri kataloğudur.",
         whyUseful: "Python projenizde bir ihtiyacınız olduğunda (örneğin resim işleme veya Excel okuma) en kaliteli kütüphaneyi anında seçmenizi sağlar.",
         beginnerExplanation: "Python programlama dili ile yapılabilecek her iş için yazılmış en iyi hazır paketlerin kategorize edilmiş listesidir.<br><br><strong>Gerçekçi Örnek:</strong> Python ile bir web sitesi yapacaksanız Django/Flask, veri analizi yapacaksanız Pandas/NumPy kütüphanelerini bu listeden bularak doğrudan kullanırsınız."
     },
-    "awesome-selfhosted": {
+    "awesome-selfhosted/awesome-selfhosted": {
         turkishTitle: "Kendi Sunucunda Barındırılabilir Yazılımlar",
         turkishSummary: "Google Drive, Trello, Spotify gibi bulut servislerinin kendi bilgisayarınızda veya sunucunuzda ücretsiz çalıştırabileceğiniz açık kaynak muadilleridir.",
         whyUseful: "Aylık abonelik ücretleri ödemeden ve verilerinizi üçüncü taraf şirketlere vermeden kendi bulut servislerinizi kurmanızı sağlar.",
         beginnerExplanation: "Evdeki eski bir bilgisayarı kendi kişisel bulut sunucunuza dönüştürmenizi sağlayan ücretsiz yazılımlar listesidir.<br><br><strong>Gerçekçi Örnek:</strong> Google Fotoğraflar yerine evdeki bilgisayarınıza Nextcloud kurarak tüm telefon fotoğraflarınızı kendi sunucunuza ücretsiz ve sınırsız yedekleyebilirsiniz."
     },
-    "react": {
+    "react/react": {
         turkishTitle: "React Kullanıcı Arayüzü Kütüphanesi",
         turkishSummary: "Meta tarafından geliştirilen, web sayfalarını bağımsız yeniden kullanılabilir bileşenlerle inşa etmeyi sağlayan en popüler arayüz kütüphanesidir.",
         whyUseful: "Tüm web sayfasını yeniden yüklemek yerine sadece değişen bileşeni güncelleyerek web sitelerinin mobil uygulama kadar hızlı çalışmasını sağlar.",
         beginnerExplanation: "Bir web sayfasını tek parça bir duvar kağıdı gibi değil, lego parçaları gibi tasarlamanızı sağlar. Sayfadaki her bir kutu, buton veya menü kendi içinde bağımsız bir bileşendir.<br><br><strong>Gerçekçi Örnek:</strong> Instagram'da bir gönderiyi beğendiğinizde sayfanın tamamı yenilenmez, sadece kalp ikonu kırmızı olur ve sayı 1 artar. React tam olarak bu anlık güncellemeleri yönetir."
     },
-    "linux": {
+    "torvalds/linux": {
         turkishTitle: "Linux İşletim Sistemi Çekirdeği",
         turkishSummary: "Dünyadaki sunucuların, süper bilgisayarların ve Android cihazların üzerinde çalıştığı açık kaynaklı işletim sistemi çekirdeğidir.",
         whyUseful: "Windows veya macOS lisans ücretlerine bağımlı kalmadan; son derece güvenli, virüs bulaşmayan ve aylarca çökmeden çalışabilen sunucu altyapıları kurmayı sağlar.",
         beginnerExplanation: "Bilgisayarın donanımı (işlemci, bellek, disk) ile yazılımlar arasındaki iletişimi sağlayan ana motor parçasıdır.<br><br><strong>Gerçekçi Örnek:</strong> Google, Netflix, Trendyol gibi milyonlarca kullanıcısı olan dev hizmetlerin arka plandaki sunucuları kesintisiz hizmet vermek için Linux üzerinde çalışır."
     },
-    "n8n": {
+    "n8n-io/n8n": {
         turkishTitle: "Kodsuz İş Akışı ve Servis Otomasyonu",
         turkishSummary: "Farklı internet servislerini (Gmail, Slack, Sheets, Trello) kod yazmadan birbirine bağlayıp otomasyonlar kurmanızı sağlayan açık kaynaklı platformdur.",
         whyUseful: "İnsanların elle yaptığı sürükle-bırak, veri kopyalama ve bildirim atma gibi tekrarlayan rutin işleri arka planda 7/24 otomatik çalışan dijital iş akışlarına çevirir.",
         beginnerExplanation: "Tıpkı bir dijital bant sistemi gibi, bir olay gerçekleştiğinde (örneğin e-posta geldiğinde) sonraki adımları otomatik tetikler.<br><br><strong>Gerçekçi Örnek:</strong> Şirket e-postanıza bir fatura PDF'i geldiğinde, n8n bu dosyayı Google Drive'a kaydeder, tutarı Excel tablosuna ekler ve Slack kanalından muhasebeye mesaj gönderir."
     },
-    "ollama": {
+    "ollama/ollama": {
         turkishTitle: "Yerel Yapay Zeka Model Sunucusu",
         turkishSummary: "Bilgisayarınıza internete bağlı olmadan, tamamen yerel olarak çalışabilen yapay zeka modelleri (ChatGPT benzeri zekalar) kurmanızı sağlayan bir köprüdür.",
         whyUseful: "Verilerinizi gizli tutarak ve internet bağlantısına ihtiyaç duymadan kendi bilgisayarınızın gücüyle çalışan ücretsiz yapay zekalara sahip olmanızı sağlar.",
         beginnerExplanation: "Telefonunuza bir oyun yükleyip internetiniz kapalıyken bile oynamak gibi, yapay zekayı da tamamen kendi cihazınıza indirip internet bağımsız konuşabilmenizi sağlar.<br><br><strong>Gerçekçi Örnek:</strong> Gizli bir şirket belgesini veya özel kodlarınızı internetteki bir servise göndermeden, tamamen kendi bilgisayarınızda Ollama ile çalışan LLaMA modeli üzerinden analiz edebilirsiniz."
     },
-    "yt-dlp": {
+    "yt-dlp/yt-dlp": {
         turkishTitle: "Gelişmiş Video ve Ses İndirme Aracı",
         turkishSummary: "YouTube ve 1000'den fazla siteden komut satırı üzerinden en yüksek kalitede video ve ses indirmeyi sağlayan açık kaynaklı araçtır.",
         whyUseful: "Web sitelerindeki reklamlı, virüslü veya sınırlandırmalı video dönüştürücülere ihtiyaç duymadan, doğrudan terminal üzerinden orijinal kalitede indirme yapmanızı sağlar.",
         beginnerExplanation: "Komut satırına sadece video linkini yapıştırarak videoyu MP4 formatında veya doğrudan MP3 ses dosyası olarak bilgisayarınıza kaydetmenizi sağlar.<br><br><strong>Gerçekçi Örnek:</strong> 100 videoluk bir müzik oynatma listesini veya uzun bir ders videosunu tek bir komutla en yüksek ses kalitesinde MP3 olarak bilgisayarınıza indirebilirsiniz."
     },
-    "AutoGPT": {
+    "significant-gravitas/autogpt": {
         turkishTitle: "Otonom Görev Yürüten Yapay Zeka",
         turkishSummary: "Belirttiğiniz karmaşık bir hedefi başarmak için kendi kendine internette araştırma yapan, dosyalar oluşturan ve adımları kendi planlayan otonom bir yapay zeka ajanıdır.",
         whyUseful: "Tekrarlayan pazar araştırması, dosya analizi veya içerik derleme işlerinde insan müdahalesine gerek duymadan sonuca ulaşılmasını sağlar.",
         beginnerExplanation: "Sizin verdiğiniz bir hedef doğrultusunda kendi kendine adımlar atan dijital bir araştırmacıdır.<br><br><strong>Gerçekçi Örnek:</strong> 'Bana 2026'nın en iyi 5 yazılım dilini araştır ve rapor hazırla' dediğinizde; interneti tarar, verileri derler ve rapor belgesi olarak bilgisayarınıza kaydeder."
     },
-    "vscode": {
+    "microsoft/vscode": {
         turkishTitle: "Microsoft Kod Editörü (VS Code)",
         turkishSummary: "Microsoft tarafından geliştirilen, hafif, çok hızlı ve geniş eklenti desteğiyle özelleştirilebilen dünyanın en popüler kaynak kod editörüdür.",
         whyUseful: "Yazılım geliştirirken kod renklendirme, hata tespiti, otomatik tamamlama ve Git entegrasyonu sunarak kod yazma verimini katlar.",
         beginnerExplanation: "Yazılımcıların kodlarını yazdığı gelişmiş bir kelime işlemci (Word benzeri ama koda özel) aracıdır.<br><br><strong>Gerçekçi Örnek:</strong> Kod yazarken yaptığınız imla hatalarını renkli olarak uyarır, fonksiyon isimlerini siz yazarken otomatik tamamlar ve projenizi tek tıkla çalıştırmanızı sağlar."
     },
-    "transformers": {
+    "huggingface/transformers": {
         turkishTitle: "Hugging Face Yapay Zeka Modelleri Kütüphanesi",
         turkishSummary: "ChatGPT, BERT, LLaMA gibi dünyaca ünlü yapay zeka modellerini Python projelerinize birkaç satır kodla entegre etmenizi sağlayan standart kütüphanedir.",
         whyUseful: "Devasa yapay zeka modellerini sıfırdan eğitmek yerine, önceden eğitilmiş en güçlü dil ve görsel modellerini doğrudan kendi uygulamanızda çalıştırmanızı sağlar.",
         beginnerExplanation: "Hazır yapay zeka zekalarını projenize bir eklenti gibi bağlamanızı imkanlı kılar.<br><br><strong>Gerçekçi Örnek:</strong> Müşteri yorumlarını analiz edip hangilerinin olumlu hangilerinin şikayet olduğunu tespit eden veya uzun makaleleri 2 cümlede özetleyen bir yapay zeka uygulamasını hızlıca hazırlayabilirsiniz."
     },
-    "stable-diffusion-webui": {
+    "automatic1111/stable-diffusion-webui": {
         turkishTitle: "Yerel AI Görsel Üretim Web Arayüzü",
         turkishSummary: "Bilgisayarınızda metin komutlarından yüksek kalitede görseller üreten Stable Diffusion modelini tarayıcı üzerinden kullanmanızı sağlanan arayüzdür.",
         whyUseful: "Midjourney gibi ücretli servislere bağımlı olmadan kendi ekran kartınız üzerinden sınırsız ve ücretsiz sanatsal görseller üretmenizi sağlar.",
         beginnerExplanation: "Yazdığınız Türkçe veya İngilizce kelimeleri dijital tablolara ve fotoğraflara dönüştüren kişisel görsel stüdyonuzdur.<br><br><strong>Gerçekçi Örnek:</strong> 'Uzayda yürüyen siberpunk bir kedi' metnini girerek saniyeler içinde benzersiz dijital çizimler ve yüksek çözünürlüklü fotoğraflar ürettirebilirsiniz."
     },
-    "markitdown": {
+    "microsoft/markitdown": {
         turkishTitle: "Belgeleri Yapay Zeka Formatına Çevirici",
         turkishSummary: "Microsoft tarafından geliştirilen; PDF, Word, Excel, PowerPoint ve resim dosyalarını yapay zekaların (LLM) okuyabileceği Markdown metnine dönüştüren araçtır.",
         whyUseful: "Karmaşık şirket içi dökümanları ve tabloları yapay zeka modellerine eksiksiz veri olarak besleme sürecini saniyelere indirir.",
         beginnerExplanation: "Farklı formatlardaki tüm belgelerinizi yapay zekanın anlayacağı tek bir düz metin diline çevirir.<br><br><strong>Gerçekçi Örnek:</strong> 100 sayfalık karmaşık bir PDF sunumunu tek bir komutla yapay zekaya aktarabileceğiniz temiz Markdown belgesine dönüştürür."
     },
-    "prompts.chat": {
+    "f/prompts.chat": {
         turkishTitle: "Harika ChatGPT Komutları Koleksiyonu",
         turkishSummary: "Yapay zeka modellerinden (ChatGPT, Claude vb.) en doğru yanıtları almak için hazırlanmış özelleştirilmiş komut (prompt) kütüphanesidir.",
         whyUseful: "Yapay zekayı belirli bir uzmanlık rolüne sokarak sıradan cevaplar yerine profesyonel çıktılar elde etmenizi sağlar.",
         beginnerExplanation: "Yapay zekaya doğru soruları sormanızı sağlayan hazır rol oynama cümleleri koleksiyonudur.<br><br><strong>Gerçekçi Örnek:</strong> Yapay zekaya 'Sen 20 yıllık bir İngilizce öğretmenisin, benimle B2 seviyesinde konuş ve hatalarımı düzelt' komutunu vererek etkileşimli dil pratiği yapabilirsiniz."
     },
-    "ohmyzsh": {
+    "ohmyzsh/ohmyzsh": {
         turkishTitle: "Terminal Özelleştirme ve Eklenti Çerçevesi",
         turkishSummary: "Zsh komut satırını özelleştiren, renkli temalar, otomatik kod tamamlama ve git kısayol eklentileri sunan popüler bir araçtır.",
         whyUseful: "Geliştiricilerin terminaldeki çalışma hızını artırır, hangi git dalında olduğunu ve komut geçmişini renklendirerek görünür kılar.",
         beginnerExplanation: "Sıkıcı siyah-beyaz komut satırınızı renkli, akıllı ve hızlı bir çalışma alanına dönüştürür.<br><br><strong>Gerçekçi Örnek:</strong> Komut yazarken ilk iki harfini yazdığınızda geçmişteki komutlarınızı otomatik önerir ve git projenizin durumunu ikonlarla terminalde gösterir."
     },
-    "bootstrap": {
+    "twbs/bootstrap": {
         turkishTitle: "Bootstrap Mobil Uyumlu HTML/CSS Çerçevesi",
         turkishSummary: "Dünyanın en popüler mobil öncelikli responsive web sitesi geliştirme ve stil kütüphanesidir.",
         whyUseful: "Sıfırdan CSS stilleri yazmak yerine hazır butonlar, navigasyon çubukları, modallar ve ızgara sistemleri sunarak web sitesi tasarımını çok hızlandırır.",
         beginnerExplanation: "Web siteniz için hazır mobilya takımı gibidir. Tasarımla saatlerce uğraşmadan şık butonlar ve menüler eklemenizi sağlar.<br><br><strong>Gerçekçi Örnek:</strong> Telefon ekranında da bilgisayar ekranında da kusursuz görünen esnek bir web sayfasını hazır yapı bloklarıyla yarım saatte kurabilirsiniz."
     },
-    "flutter": {
+    "flutter/flutter": {
         turkishTitle: "Flutter Çapraz Platform Mobil UI Kit",
         turkishSummary: "Google tarafından geliştirilen; tek bir kod tabanıyla iOS, Android, Web ve Masaüstü uygulamaları inşa etmeyi sağlayan çerçevedir.",
         whyUseful: "Aynı uygulamayı hem iPhone hem de Android için ayrı ayrı yazma zorunluluğunu kaldırır, maliyet ve süreci yarı yarıya azaltır.",
         beginnerExplanation: "Tek bir dilde (Dart) kod yazarak aynı uygulamanın hem App Store'da hem Google Play Store'da çalışmasını sağlar.<br><br><strong>Gerçekçi Örnek:</strong> Bir yemek siparişi uygulaması yazarken tek kodla hem iPhone kullanıcılarına hem Samsung kullanıcılarına aynı kalitede uygulama sunarsınız."
     },
-    "vue": {
+    "vuejs/vue": {
         turkishTitle: "Vue.js İlerici JavaScript Çerçevesi",
         turkishSummary: "Kullanıcı arayüzleri inşa etmek için geliştirilen, öğrenmesi son derece kolay ve performanslı bir JavaScript kütüphanesidir.",
         whyUseful: "Web sitenize adım adım entegre edilebilir; küçük bir form kontrolünden devasa tek sayfalık uygulamalara (SPA) kadar esnekçe büyür.",
@@ -1241,17 +1241,11 @@ function hasKeyword(text, words) {
 }
 
 function findSpecificKnowledge(repo) {
-    // 1. Check if repo is in curated knowledge base (owner/name first: names like "skills" are not unique)
+    // Keys are lowercase "owner/name": repo names alone are not unique (e.g. "skills", "react").
     const ownerName = repo.owner ? (repo.owner.login || repo.owner) : '';
+    const key = `${ownerName}/${repo.name}`.toLowerCase();
     const knowledge = typeof REPO_KNOWLEDGE !== 'undefined' ? REPO_KNOWLEDGE : {};
-    const ownerKnowledge = knowledge[`${ownerName}/${repo.name}`.toLowerCase()];
-    if (ownerKnowledge) {
-        return ownerKnowledge;
-    }
-    if (REPO_SPECIFIC_KNOWLEDGE[repo.name]) {
-        return REPO_SPECIFIC_KNOWLEDGE[repo.name];
-    }
-    return null;
+    return knowledge[key] || REPO_SPECIFIC_KNOWLEDGE[key] || null;
 }
 
 function getSmartDomainExplanation(repo) {
