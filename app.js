@@ -1519,6 +1519,11 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         fetchAgentRepos,
         fetchSkillsRepos,
         getSmartDomainExplanation,
+        getBookmarks,
+        saveBookmarks,
+        isBookmarked,
+        toggleBookmark,
+        filterByLanguage,
         REPO_SPECIFIC_KNOWLEDGE,
         state
     };
