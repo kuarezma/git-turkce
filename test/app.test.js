@@ -233,6 +233,17 @@ describe('Repo Specific Turkish Explanations', () => {
         expect(info.turkishTitle).toContain('Veritabanı');
         expect(info.beginnerExplanation).toContain('dijital kasadır');
     });
+
+    test('should not match keywords inside longer words', () => {
+        // "build" ve "guide" içinde "ui" geçer; arayüz kütüphanesi sayılmamalı.
+        const info = getSmartDomainExplanation({ name: 'build-guide', description: 'A guide to build things' });
+        expect(info.turkishTitle).not.toContain('Arayüz');
+    });
+
+    test('should still match plural and hyphenated keywords', () => {
+        const info = getSmartDomainExplanation({ name: 'mini', description: 'Small tools for agents', topics: ['llm-agents'] });
+        expect(info.turkishTitle).toContain('Yapay Zeka Ajanı');
+    });
 });
 
 describe('Favoriler ve dil filtresi', () => {

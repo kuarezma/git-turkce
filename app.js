@@ -972,7 +972,7 @@ async function openRepoDetail(repo, isCurated) {
         elements.modalRepoTrTitle.textContent = domainInfo.turkishTitle || repo.turkishTitle;
         elements.modalTrSummary.textContent = domainInfo.turkishSummary || repo.turkishSummary;
         elements.modalWhyUseful.textContent = domainInfo.whyUseful || repo.whyUseful;
-        elements.modalBeginnerExplanation.innerHTML = repo.beginnerExplanation || domainInfo.beginnerExplanation;
+        elements.modalBeginnerExplanation.innerHTML = domainInfo.beginnerExplanation || repo.beginnerExplanation;
         elements.modalHowToUse.textContent = repo.howToUse;
     } else {
         // Live data: needs API translation / smart domain classifier fallback
@@ -1145,6 +1145,11 @@ const REPO_SPECIFIC_KNOWLEDGE = {
     }
 };
 
+// Tam kelime eşleşmesi: "build" içindeki "ui" veya "guide" içindeki "ui" yanlış sınıflandırmaya yol açmasın.
+function hasKeyword(text, words) {
+    return new RegExp(`(?:^|[^a-z0-9])(?:${words.join('|')})s?(?:[^a-z0-9]|$)`).test(text);
+}
+
 function getSmartDomainExplanation(repo) {
     const name = (repo.name || '').toLowerCase();
     const desc = (repo.description || '').toLowerCase();
@@ -1158,7 +1163,7 @@ function getSmartDomainExplanation(repo) {
     }
     
     // 2. Domain classification based on keywords
-    if (fullText.includes('agent') || fullText.includes('autonomous') || fullText.includes('llm') || fullText.includes('gpt') || fullText.includes('ai assistant')) {
+    if (hasKeyword(fullText, ['agent', 'autonomous', 'llm', 'gpt', 'ai assistant'])) {
         return {
             turkishTitle: `${repo.name} Yapay Zeka Ajanı`,
             turkishSummary: `Bu proje, yapay zeka modellerinin kendi kendine mantık yürütmesini ve karmaşık otonom görevleri yapmasını sağlayan bir sistemdir.`,
@@ -1167,7 +1172,7 @@ function getSmartDomainExplanation(repo) {
         };
     }
     
-    if (fullText.includes('mcp') || fullText.includes('skill') || fullText.includes('tool') || fullText.includes('plugin') || fullText.includes('extension')) {
+    if (hasKeyword(fullText, ['mcp', 'skill', 'tool', 'plugin', 'extension'])) {
         return {
             turkishTitle: `${repo.name} Yetenek & Entegrasyon Aracı`,
             turkishSummary: `Bu araç, mevcut sistemlere veya yapay zeka modellerine ek yetenekler, bağlantılar ve işlevler kazandıran bir modüldür.`,
@@ -1176,7 +1181,7 @@ function getSmartDomainExplanation(repo) {
         };
     }
 
-    if (fullText.includes('react') || fullText.includes('vue') || fullText.includes('ui') || fullText.includes('frontend') || fullText.includes('css') || fullText.includes('component')) {
+    if (hasKeyword(fullText, ['react', 'vue', 'ui', 'frontend', 'css', 'component'])) {
         return {
             turkishTitle: `${repo.name} Arayüz (UI) Kütüphanesi`,
             turkishSummary: `Bu proje, modern web sayfaları ve kullanıcı arayüzü bileşenleri (butonlar, menüler, kartlar) geliştirmek için tasarlanmıştır.`,
@@ -1185,7 +1190,7 @@ function getSmartDomainExplanation(repo) {
         };
     }
 
-    if (fullText.includes('database') || fullText.includes('db') || fullText.includes('sql') || fullText.includes('redis') || fullText.includes('mongo') || fullText.includes('storage')) {
+    if (hasKeyword(fullText, ['database', 'db', 'sql', 'redis', 'mongo', 'storage'])) {
         return {
             turkishTitle: `${repo.name} Veritabanı Servisi`,
             turkishSummary: `Bu proje, uygulama verilerini yüksek hızda depolamak, sorgulamak ve güvenle saklamak için geliştirilmiş bir veritabanı çözümüdür.`,
@@ -1194,7 +1199,7 @@ function getSmartDomainExplanation(repo) {
         };
     }
 
-    if (fullText.includes('cli') || fullText.includes('terminal') || fullText.includes('command') || fullText.includes('shell') || fullText.includes('script')) {
+    if (hasKeyword(fullText, ['cli', 'terminal', 'command', 'shell', 'script'])) {
         return {
             turkishTitle: `${repo.name} Komut Satırı (CLI) Aracı`,
             turkishSummary: `Bu araç, komut satırı (terminal) üzerinden geliştirici süreçlerini otomatikleştiren ve hızlı işlemler yapmayı sağlayan bir yardımcıdır.`,
@@ -1203,7 +1208,7 @@ function getSmartDomainExplanation(repo) {
         };
     }
 
-    if (fullText.includes('security') || fullText.includes('auth') || fullText.includes('crypto') || fullText.includes('vulnerability') || fullText.includes('audit')) {
+    if (hasKeyword(fullText, ['security', 'auth', 'crypto', 'vulnerability', 'audit'])) {
         return {
             turkishTitle: `${repo.name} Güvenlik & Doğrulama Modülü`,
             turkishSummary: `Bu proje, yazılımlardaki güvenlik açıklarını tespit etmek, şifreleme yapmak veya kullanıcı yetkilerini yönetmek için geliştirilmiştir.`,
@@ -1212,7 +1217,7 @@ function getSmartDomainExplanation(repo) {
         };
     }
 
-    if (fullText.includes('api') || fullText.includes('http') || fullText.includes('rest') || fullText.includes('graphql') || fullText.includes('sdk')) {
+    if (hasKeyword(fullText, ['api', 'http', 'rest', 'graphql', 'sdk'])) {
         return {
             turkishTitle: `${repo.name} Servis Entegrasyon Bağlantısı`,
             turkishSummary: `Bu proje, farklı yazılımların ve web servislerinin birbirleriyle veri alışverişi yapmasını sağlayan bir bağlantı katmanıdır.`,
