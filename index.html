@@ -34,9 +34,6 @@
                 <button type="button" class="nav-tab" id="tab-settings" data-target="panel-settings">
                     <span class="tab-icon">⚙️</span> Gemini API
                 </button>
-                <button type="button" class="nav-tab premium-highlight" id="tab-premium" data-target="panel-premium">
-                    <span class="tab-icon">👑</span> Premium Üyelik
-                </button>
             </nav>
         </header>
 
@@ -161,72 +158,6 @@
                 </div>
             </section>
 
-            <!-- PANEL 4: Premium Subscription (Abonelik) -->
-            <section class="content-panel" id="panel-premium">
-                <div class="panel-header">
-                    <h2>👑 GitTürkçe Premium Üyelik</h2>
-                    <p>Sınırsız proje erişimi, canlı kod çevirisi ve yapay zeka entegrasyonu ile yazılım dünyasını Türkçe keşfedin.</p>
-                </div>
-
-                <div class="pricing-container" id="premium-subscription-container">
-                    <span class="pricing-badge">Sınırsız Erişim</span>
-                    <h3 class="pricing-title">GitTürkçe Premium</h3>
-                    <div class="pricing-price">99 TL <span>/ Aylık</span></div>
-
-                    <ul class="pricing-features">
-                        <li><span class="check-icon">✓</span> 100+ Popüler GitHub Projesine Detaylı Erişim</li>
-                        <li><span class="check-icon">✓</span> Canlı GitHub URL / Link Çözümleyici ve Klonlayıcı</li>
-                        <li><span class="check-icon">✓</span> Gemini API Entegrasyonu ile Yapay Zeka Türkçe Çeviri</li>
-                        <li><span class="check-icon">✓</span> Tek Tıkla ZIP Olarak İndirme ve Hızlı Kurulum Kodları</li>
-                        <li><span class="check-icon">✓</span> Reklamsız, Süper Hızlı ve Premium Gece Teması</li>
-                    </ul>
-
-                    <div id="premium-status-section">
-                        <!-- Will display subscription activation actions or activated badge -->
-                        <button type="button" id="open-pay-modal-btn" class="primary-btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
-                            💳 Hemen Abone Ol (99 TL)
-                        </button>
-                    </div>
-
-                    <div id="premium-activation-section" style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
-                        <h4 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.5rem;">Lisans Anahtarı ile Aktifleştir</h4>
-                        <div class="search-input-wrapper" style="margin-bottom: 0.5rem;">
-                            <input type="text" id="license-key-input" placeholder="Satın aldığınız lisans anahtarını girin (Örn: GTR-12345)..." style="padding-left: 1rem;">
-                            <button type="button" id="activate-license-btn" class="secondary-btn" style="padding: 0.8rem 1.2rem;">Aktifleştir</button>
-                        </div>
-                        <p class="field-help" style="margin-bottom: 1rem;">Bu sürümde ödeme ve lisans işlemleri tanıtım amaçlıdır.</p>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Zaten üye misiniz? <a href="#" id="toggle-login-btn" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Premium Giriş Yapın</a></p>
-                    </div>
-                </div>
-
-                <!-- Premium Login Form Container -->
-                <form class="pricing-container premium-login-form" id="premium-login-container" hidden novalidate>
-                    <span class="pricing-badge" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);">Premium Giriş</span>
-                    <h3 class="pricing-title" style="margin-bottom: 1.5rem;">👑 Premium Üye Girişi</h3>
-
-                    <div class="premium-form-fields">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="premium-email-input" style="font-size: 0.85rem;">E-posta Adresi</label>
-                            <input type="email" id="premium-email-input" placeholder="E-posta adresiniz" autocomplete="email" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="premium-password-input" style="font-size: 0.85rem;">Şifre</label>
-                            <input type="password" id="premium-password-input" placeholder="Şifrenizi girin" autocomplete="current-password" minlength="6" required>
-                        </div>
-                    </div>
-
-                    <p class="form-error" id="premium-login-error" role="alert" aria-live="polite"></p>
-
-                    <button type="submit" id="premium-login-submit-btn" class="primary-btn premium-submit-btn">
-                        🔑 Premium Giriş Yap
-                    </button>
-
-                    <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Henüz Premium üye değil misiniz? <a href="#" id="toggle-register-btn" style="color: var(--primary); text-decoration: none; font-weight: 600;">Hemen Abone Olun</a></p>
-                        <p class="field-help demo-account-note">Demo hesabı: <code>premium@gitturkce.com</code> / <code>premium123</code>. Gerçek üyelik doğrulaması için sunucu entegrasyonu gerekir.</p>
-                    </div>
-                </form>
-            </section>
         </main>
 
         <!-- FOOTER -->
@@ -316,62 +247,6 @@
             </div>
         </div>
     </div>
-    <!-- PAYMENT MODAL -->
-    <div class="modal-overlay" id="payment-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="payment-modal-title" inert>
-        <div class="payment-modal-container">
-            <button type="button" class="modal-close-btn" id="payment-modal-close" aria-label="Ödeme penceresini kapat">&times;</button>
-
-            <div class="modal-header-payment">
-                <h3 id="payment-modal-title" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">💳 Premium Abonelik Ödemesi</h3>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">Tanıtım ödeme formunu doldurarak demo premium erişimini başlatın.</p>
-            </div>
-
-            <!-- 3D Credit Card Preview -->
-            <div class="credit-card-preview">
-                <div class="card-preview-chip"></div>
-                <div class="card-preview-number" id="preview-card-number">•••• •••• •••• ••••</div>
-                <div class="card-preview-bottom">
-                    <div>
-                        <div style="font-size: 0.65rem; text-transform: uppercase;">Kart Sahibi</div>
-                        <div class="card-preview-name" id="preview-card-holder">AD SOYAD</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.65rem; text-transform: uppercase;">Son Kul.</div>
-                        <div class="card-preview-expiry" id="preview-card-expiry">AA/YY</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card Inputs Form -->
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label for="card-holder-input" style="font-size: 0.8rem;">Kart Sahibi Adı</label>
-                    <input type="text" id="card-holder-input" placeholder="Kart üzerindeki isim" autocomplete="cc-name" style="padding: 0.7rem;">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label for="card-number-input" style="font-size: 0.8rem;">Kart Numarası</label>
-                    <input type="text" id="card-number-input" maxlength="19" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" style="padding: 0.7rem;">
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <div class="form-group" style="flex: 2; margin-bottom: 0;">
-                        <label for="card-expiry-input" style="font-size: 0.8rem;">Son Kullanma Tarihi</label>
-                        <input type="text" id="card-expiry-input" maxlength="5" inputmode="numeric" autocomplete="cc-exp" placeholder="AA/YY" style="padding: 0.7rem; text-align: center;">
-                    </div>
-                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
-                        <label for="card-cvc-input" style="font-size: 0.8rem;">CVC</label>
-                        <input type="text" id="card-cvc-input" maxlength="3" inputmode="numeric" autocomplete="cc-csc" placeholder="000" style="padding: 0.7rem; text-align: center;">
-                    </div>
-                </div>
-
-                <button type="button" id="pay-submit-btn" class="primary-btn" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
-                    Demo Ödemeyi Tamamla (99 TL)
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Notification Toast -->
     <div class="toast-notification" id="toast">Kopyalandı!</div>
 

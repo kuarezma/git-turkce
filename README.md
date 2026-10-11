@@ -9,17 +9,14 @@ GitTürkçe, GitHub üzerinde yayınlanan ve yazılımcıların/öğrencilerin i
 3. **Akıllı Çeviri Motoru (MyMemory Fallback):** İngilizce açıklamaları ücretsiz ve anahtarsız MyMemory API üzerinden anlık olarak Türkçeye çevirir.
 4. **Gemini Yapay Zeka Entegrasyonu:** Ayarlar sekmesinden eklenebilen ücretsiz bir Gemini API Anahtarı ile projeleri derinlemesine analiz eder; sade bir dille "Nedir?", "Neden Yararlıdır?" ve "Nasıl Başlanır?" adımlarını otonom üretir.
 5. **Kurulum ve İndirme Paneli:** Beğenilen projeleri ZIP olarak indirme butonu ve projenin diline göre otomatik üretilen terminal kurulum komutları (kopyalama özellikli).
-6. **Responsive Tasarım:** Telefon, tablet ve bilgisayarlardan kolayca erişilebilir, göz yormayan premium karanlık tema (Dark Mode) ve glassmorphism görsel stili.
-7. **Premium Demo Girişi:** Form doğrulaması, hatalı giriş geri bildirimi, kalıcı demo oturumu ve güvenli çıkış akışı. Demo hesap: `premium@gitturkce.com` / `premium123`.
-8. **Haftanın En Popüler 100 GitHub Projesi:** Son 7 günde oluşturulmuş ve en yüksek yıldız almış projeleri GitHub API üzerinden gerçek zamanlı çekip listeleyen yeni sekme.
-9. **macOS Masaüstü Uygulaması (Electron):** Web sürümündeki premium kilitleri devre dışı bırakan, tüm özellikleri sınırsız ve ücretsiz sunan masaüstü sürümü.
-10. **En Çok Yıldız Alan 100 Proje:** Tüm zamanların en çok yıldız alan projelerini GitHub API üzerinden listeleyen sekme.
-11. **Favoriler:** Proje kartından veya detay panelinden favoriye ekleme/çıkarma; favoriler tarayıcıda (`localStorage`) saklanır ve "Favorilerim" filtresinde listelenir.
-12. **Dile Göre Süzme:** Proje listesini programlama diline göre filtreleme.
-13. **Proje Detay Eylemleri:** Depoyu VS Code'da klonlamak için açma, `git clone` komutunu kopyalama ve Türkçe proje özetini paylaşma.
-14. **Projeye Özel Türkçe Açıklamalar:** Bilinen projeler için elle yazılmış, bilinmeyenler için alan tespitiyle (yapay zeka ajanı, veritabanı vb.) üretilen sade Türkçe açıklamalar.
-
-> **Not:** Premium giriş, ödeme ve lisans özellikleri bu statik sürümde tanıtım amaçlıdır. Gerçek üyelik, ödeme ve yetkilendirme için sunucu tarafı kimlik doğrulama ve ödeme sağlayıcısı entegrasyonu gerekir.
+6. **Responsive Tasarım:** Telefon, tablet ve bilgisayarlardan kolayca erişilebilir, göz yormayan karanlık tema (Dark Mode) ve glassmorphism görsel stili.
+7. **Haftanın En Popüler 100 GitHub Projesi:** Son 7 günde oluşturulmuş ve en yüksek yıldız almış projeleri GitHub API üzerinden gerçek zamanlı çekip listeleyen yeni sekme.
+8. **macOS Masaüstü Uygulaması (Electron):** Web ve masaüstü sürümlerinde tüm özellikler ücretsizdir.
+9. **En Çok Yıldız Alan 100 Proje:** Tüm zamanların en çok yıldız alan projelerini GitHub API üzerinden listeleyen sekme.
+10. **Favoriler:** Proje kartından veya detay panelinden favoriye ekleme/çıkarma; favoriler tarayıcıda (`localStorage`) saklanır ve "Favorilerim" filtresinde listelenir.
+11. **Dile Göre Süzme:** Proje listesini programlama diline göre filtreleme.
+12. **Proje Detay Eylemleri:** Depoyu VS Code'da klonlamak için açma, `git clone` komutunu kopyalama ve Türkçe proje özetini paylaşma.
+13. **Projeye Özel Türkçe Açıklamalar:** Bilinen projeler için elle yazılmış, bilinmeyenler için alan tespitiyle (yapay zeka ajanı, veritabanı vb.) üretilen sade Türkçe açıklamalar.
 
 ---
 
@@ -84,6 +81,9 @@ Testleri çalıştırmak için:
 ---
 
 ## 📜 Değişiklik Günlüğü (Changelog)
+
+### 2026-10-12
+- Premium, üyelik, ödeme ve kart kilitleri kaldırıldı; web ve Electron uygulamasında tüm özellikler ücretsiz.
 
 ### 2026-07-21
 - Favoriler, dile göre süzme, VS Code'da açma, klon komutu kopyalama ve proje özeti paylaşma eklendi.

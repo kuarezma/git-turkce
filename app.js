@@ -3,15 +3,10 @@
  * Türkçe GitHub Kaşifi Mantığı ve API Entegrasyonları
  */
 
-const PREMIUM_STORAGE_KEY = 'git_tr_subscribed';
-const PREMIUM_EMAIL_STORAGE_KEY = 'git_tr_premium_email';
-const DEMO_PREMIUM_ACCOUNT = Object.freeze({
-    email: 'premium@gitturkce.com',
-    password: 'premium123'
-});
-
-// Detect Electron environment
-const isElectron = typeof navigator !== 'undefined' && /electron/i.test(navigator.userAgent);
+if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('git_tr_subscribed');
+    localStorage.removeItem('git_tr_premium_email');
+}
 
 // Application State
 const state = {
@@ -28,8 +23,6 @@ const state = {
             return [];
         }
     })(),
-    isSubscribed: isElectron || (typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_STORAGE_KEY) === 'true' : false),
-    premiumEmail: isElectron ? 'Masaüstü Sürümü' : ((typeof localStorage !== 'undefined' ? localStorage.getItem(PREMIUM_EMAIL_STORAGE_KEY) : '') || ''),
     searchCache: (() => {
         if (typeof localStorage === 'undefined') return {};
         try {
@@ -89,39 +82,6 @@ const elements = typeof document !== 'undefined' ? {
     modalEnDesc: document.getElementById('modal-en-desc'),
     btnCopyCode: document.getElementById('btn-copy-code'),
     
-    // Premium Panel & Modals
-    premiumStatusSection: document.getElementById('premium-status-section'),
-    premiumActivationSection: document.getElementById('premium-activation-section'),
-    openPayModalBtn: document.getElementById('open-pay-modal-btn'),
-    licenseKeyInput: document.getElementById('license-key-input'),
-    activateLicenseBtn: document.getElementById('activate-license-btn'),
-    
-    // Login Form Elements
-    toggleLoginBtn: document.getElementById('toggle-login-btn'),
-    toggleRegisterBtn: document.getElementById('toggle-register-btn'),
-    premiumSubscriptionContainer: document.getElementById('premium-subscription-container'),
-    premiumLoginContainer: document.getElementById('premium-login-container'),
-    premiumEmailInput: document.getElementById('premium-email-input'),
-    premiumPasswordInput: document.getElementById('premium-password-input'),
-    premiumLoginError: document.getElementById('premium-login-error'),
-    premiumLoginSubmitBtn: document.getElementById('premium-login-submit-btn'),
-    
-    // Payment Modal
-    paymentModal: document.getElementById('payment-modal'),
-    paymentModalClose: document.getElementById('payment-modal-close'),
-    paySubmitBtn: document.getElementById('pay-submit-btn'),
-    
-    // Card inputs
-    cardHolderInput: document.getElementById('card-holder-input'),
-    cardNumberInput: document.getElementById('card-number-input'),
-    cardExpiryInput: document.getElementById('card-expiry-input'),
-    cardCvcInput: document.getElementById('card-cvc-input'),
-    
-    // Card preview targets
-    previewCardHolder: document.getElementById('preview-card-holder'),
-    previewCardNumber: document.getElementById('preview-card-number'),
-    previewCardExpiry: document.getElementById('preview-card-expiry'),
-    
     // Toast
     toast: document.getElementById('toast')
 } : {};
@@ -135,7 +95,6 @@ if (typeof document !== 'undefined') {
         initFilters();
         initSearch();
         initModal();
-        initPremium();
     });
 }
 
@@ -281,7 +240,7 @@ async function renderCuratedRepos() {
             return;
         }
         favs.forEach(repo => {
-            const card = createRepoCard(repo, true, false);
+            const card = createRepoCard(repo, true);
             elements.curatedGrid.appendChild(card);
         });
         return;
@@ -299,9 +258,8 @@ async function renderCuratedRepos() {
             const repos = filterByLanguage(rawRepos);
             elements.curatedGrid.innerHTML = '';
             if (repos && repos.length > 0) {
-                repos.forEach((repo, idx) => {
-                    const isLocked = !state.isSubscribed && idx > 2;
-                    const card = createRepoCard(repo, false, isLocked);
+                repos.forEach(repo => {
+                    const card = createRepoCard(repo, false);
                     elements.curatedGrid.appendChild(card);
                 });
             } else {
@@ -326,9 +284,8 @@ async function renderCuratedRepos() {
             const repos = filterByLanguage(rawRepos);
             elements.curatedGrid.innerHTML = '';
             if (repos && repos.length > 0) {
-                repos.forEach((repo, idx) => {
-                    const isLocked = !state.isSubscribed && idx > 2;
-                    const card = createRepoCard(repo, false, isLocked);
+                repos.forEach(repo => {
+                    const card = createRepoCard(repo, false);
                     elements.curatedGrid.appendChild(card);
                 });
             } else {
@@ -362,10 +319,8 @@ async function renderCuratedRepos() {
         return;
     }
 
-    filteredRepos.forEach((repo, idx) => {
-        // Lock every item after index 2 if they are not subscribed
-        const isLocked = !state.isSubscribed && idx > 2;
-        const card = createRepoCard(repo, true, isLocked);
+    filteredRepos.forEach(repo => {
+        const card = createRepoCard(repo, true);
         elements.curatedGrid.appendChild(card);
     });
 }
@@ -397,13 +352,12 @@ async function renderMergedCategory(categoryName, fetchFunc, loadingText) {
         
         elements.curatedGrid.innerHTML = '';
         if (filtered.length > 0) {
-            filtered.forEach((repo, idx) => {
-                const isLocked = !state.isSubscribed && idx > 2;
+            filtered.forEach(repo => {
                 const isCurated = curated.some(c => 
                     c.name.toLowerCase() === repo.name.toLowerCase() && 
                     (c.owner || '').toLowerCase() === (repo.owner.login || repo.owner || '').toLowerCase()
                 );
-                const card = createRepoCard(repo, isCurated, isLocked);
+                const card = createRepoCard(repo, isCurated);
                 elements.curatedGrid.appendChild(card);
             });
         } else {
@@ -447,9 +401,9 @@ function initFilters() {
     });
 }
 
-function createRepoCard(repo, isCurated, isLocked = false) {
+function createRepoCard(repo, isCurated) {
     const card = document.createElement('div');
-    card.className = isLocked ? 'repo-card locked' : 'repo-card';
+    card.className = 'repo-card';
 
     const domainInfo = getSmartDomainExplanation(repo);
     const repositoryOwner = isCurated ? repo.owner : (repo.owner ? (repo.owner.login || repo.owner) : '');
@@ -476,12 +430,6 @@ function createRepoCard(repo, isCurated, isLocked = false) {
         <div class="card-footer">
             <span class="card-action-hint">Detayları Gör ➔</span>
         </div>
-        ${isLocked ? `
-        <div class="card-lock-overlay">
-            <div class="lock-badge">🔒</div>
-            <div class="lock-text">Premium Üyelik</div>
-        </div>
-        ` : ''}
     `;
     
     const starBtn = card.querySelector('.card-bookmark-star');
@@ -491,12 +439,7 @@ function createRepoCard(repo, isCurated, isLocked = false) {
     });
 
     card.addEventListener('click', () => {
-        if (isLocked) {
-            // Trigger subscription activation modal
-            openPaymentModal();
-        } else {
-            openRepoDetail(repo, isCurated);
-        }
+        openRepoDetail(repo, isCurated);
     });
     
     return card;
@@ -566,9 +509,7 @@ async function performSearch() {
             const repoData = await fetchGitHubRepo(parsed.owner, parsed.repo);
             elements.liveStatus.style.display = 'none';
             if (repoData) {
-                // If not subscribed, click leads to payment modal
-                const isLocked = !state.isSubscribed;
-                const card = createRepoCard(repoData, false, isLocked);
+                const card = createRepoCard(repoData, false);
                 elements.liveGrid.appendChild(card);
             } else {
                 showEmptyState('Proje Bulunamadı', 'Girdiğiniz GitHub bağlantısı geçerli bir projeyi işaret etmiyor olabilir.');
@@ -580,8 +521,7 @@ async function performSearch() {
             elements.liveStatus.style.display = 'none';
             if (results && results.length > 0) {
                 results.forEach(repo => {
-                    const isLocked = !state.isSubscribed;
-                    const card = createRepoCard(repo, false, isLocked);
+                    const card = createRepoCard(repo, false);
                     elements.liveGrid.appendChild(card);
                 });
             } else {
@@ -954,7 +894,6 @@ function initModal() {
     document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
         if (elements.detailModal.classList.contains('active')) closeModal();
-        if (elements.paymentModal.classList.contains('active')) closePaymentModal();
     });
     
     // Copy code button inside modal
@@ -1351,269 +1290,11 @@ function showToast(message, isError = false) {
     }, 2500);
 }
 
-// 8. Premium & Payment Management
-function initPremium() {
-    if (typeof document === 'undefined') return;
-
-    // Show/hide UI sections based on active subscription
-    refreshSubscriptionUI();
-
-    elements.paymentModalClose.addEventListener('click', closePaymentModal);
-    elements.paymentModal.addEventListener('click', (e) => {
-        if (e.target === elements.paymentModal) closePaymentModal();
-    });
-
-    // Real-time synchronization: Card Holder
-    elements.cardHolderInput.addEventListener('input', (e) => {
-        const val = e.target.value.toUpperCase();
-        elements.previewCardHolder.textContent = val || 'AD SOYAD';
-    });
-
-    // Real-time synchronization: Card Number
-    elements.cardNumberInput.addEventListener('input', (e) => {
-        let val = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-        let formatted = '';
-        for (let i = 0; i < val.length; i++) {
-            if (i > 0 && i % 4 === 0) formatted += ' ';
-            formatted += val[i];
-        }
-        e.target.value = formatted;
-        elements.previewCardNumber.textContent = formatted || '•••• •••• •••• ••••';
-    });
-
-    // Real-time synchronization: Expiry Date
-    elements.cardExpiryInput.addEventListener('input', (e) => {
-        let val = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-        if (val.length >= 2) {
-            val = val.substring(0, 2) + '/' + val.substring(2, 4);
-        }
-        e.target.value = val;
-        elements.previewCardExpiry.textContent = val || 'AA/YY';
-    });
-
-    // Handle checkout submission
-    elements.paySubmitBtn.addEventListener('click', () => {
-        const holder = elements.cardHolderInput.value.trim();
-        const number = elements.cardNumberInput.value.replace(/\s+/g, '');
-        const expiry = elements.cardExpiryInput.value.trim();
-        const cvc = elements.cardCvcInput.value.trim();
-
-        if (holder.length < 5) {
-            showToast('Lütfen kart sahibinin adını tam girin.', true);
-            return;
-        }
-        if (number.length !== 16) {
-            showToast('Lütfen 16 haneli kart numarasını tam girin.', true);
-            return;
-        }
-        if (expiry.length !== 5 || !expiry.includes('/')) {
-            showToast('Lütfen geçerli son kullanma tarihi girin (AA/YY).', true);
-            return;
-        }
-        if (cvc.length !== 3) {
-            showToast('Lütfen 3 haneli güvenlik kodunu (CVC) girin.', true);
-            return;
-        }
-
-        // Simulating loading overlay
-        elements.paySubmitBtn.textContent = '🔒 Ödeme Alınıyor...';
-        elements.paySubmitBtn.disabled = true;
-
-        setTimeout(() => {
-            setPremiumSession('Demo ödeme kullanıcısı');
-            
-            elements.paySubmitBtn.textContent = 'Demo Ödemeyi Tamamla (99 TL)';
-            elements.paySubmitBtn.disabled = false;
-            
-            closePaymentModal();
-            refreshSubscriptionUI();
-            renderCuratedRepos();
-            
-            // Auto generate license code for feedback simulation
-            const generatedLicense = 'GTR-' + Math.floor(10000 + Math.random() * 90000);
-            showToast(`💎 Tebrikler! Abone oldunuz. Lisans Anahtarınız: ${generatedLicense}`);
-        }, 1500);
-    });
-
-    // License activation logic
-    elements.activateLicenseBtn.addEventListener('click', () => {
-        const license = elements.licenseKeyInput.value.trim();
-        if (/^GTR-\d{5}$/.test(license)) {
-            setPremiumSession('Lisans kullanıcısı');
-            refreshSubscriptionUI();
-            renderCuratedRepos();
-            showToast('🔑 Lisans anahtarı başarıyla doğrulandı! Premium aktifleşti.');
-            elements.licenseKeyInput.value = '';
-        } else {
-            showToast('Geçersiz lisans kodu. Örnek biçim: GTR-12345', true);
-        }
-    });
-
-    // Toggle views: Show Login Form
-    elements.toggleLoginBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        elements.premiumSubscriptionContainer.hidden = true;
-        elements.premiumLoginContainer.hidden = false;
-        elements.premiumLoginError.textContent = '';
-        elements.premiumEmailInput.focus();
-    });
-
-    // Toggle views: Show Pricing / Register Form
-    elements.toggleRegisterBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        showPremiumSubscriptionView();
-    });
-
-    // Handle Premium Login Submission
-    elements.premiumLoginContainer.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const email = elements.premiumEmailInput.value.trim();
-        const password = elements.premiumPasswordInput.value;
-        const validation = validatePremiumLogin(email, password);
-
-        elements.premiumLoginError.textContent = validation.message || '';
-        if (!validation.isValid) {
-            showToast(validation.message, true);
-            return;
-        }
-
-        // Simulating authentication delay
-        elements.premiumLoginSubmitBtn.textContent = '🔑 Giriş Yapılıyor...';
-        elements.premiumLoginSubmitBtn.disabled = true;
-
-        setTimeout(() => {
-            elements.premiumLoginSubmitBtn.textContent = '🔑 Premium Giriş Yap';
-            elements.premiumLoginSubmitBtn.disabled = false;
-
-            setPremiumSession(email.toLowerCase());
-            elements.premiumEmailInput.value = '';
-            elements.premiumPasswordInput.value = '';
-            elements.premiumLoginError.textContent = '';
-            showPremiumSubscriptionView();
-            refreshSubscriptionUI();
-            renderCuratedRepos();
-            showToast('Premium demo hesabına giriş yapıldı.');
-        }, 500);
-    });
-}
-
-function validatePremiumLogin(email, password) {
-    const normalizedEmail = String(email || '').trim().toLowerCase();
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-        return { isValid: false, message: 'Geçerli bir e-posta adresi girin.' };
-    }
-
-    if (String(password || '').length < 6) {
-        return { isValid: false, message: 'Şifre en az 6 karakter olmalıdır.' };
-    }
-
-    if (normalizedEmail !== DEMO_PREMIUM_ACCOUNT.email || password !== DEMO_PREMIUM_ACCOUNT.password) {
-        return { isValid: false, message: 'E-posta veya şifre hatalı. Demo hesap bilgilerini kullanın.' };
-    }
-
-    return { isValid: true, message: '' };
-}
-
-function setPremiumSession(email) {
-    state.isSubscribed = true;
-    state.premiumEmail = email;
-    localStorage.setItem(PREMIUM_STORAGE_KEY, 'true');
-    localStorage.setItem(PREMIUM_EMAIL_STORAGE_KEY, email);
-}
-
-function clearPremiumSession() {
-    state.isSubscribed = false;
-    state.premiumEmail = '';
-    localStorage.removeItem(PREMIUM_STORAGE_KEY);
-    localStorage.removeItem(PREMIUM_EMAIL_STORAGE_KEY);
-}
-
-function showPremiumSubscriptionView() {
-    elements.premiumLoginContainer.hidden = true;
-    elements.premiumSubscriptionContainer.hidden = false;
-}
-
-function refreshSubscriptionUI() {
-    if (typeof document === 'undefined') return;
-
-    if (state.isSubscribed) {
-        if (isElectron) {
-            elements.premiumStatusSection.innerHTML = `
-                <div class="api-status-badge active" style="margin-bottom: 0; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <span class="status-dot"></span>
-                    <span>Masaüstü Sürümü — Sınırsız &amp; Ücretsiz</span>
-                </div>
-            `;
-            if (elements.premiumActivationSection) {
-                elements.premiumActivationSection.style.display = 'none';
-            }
-        } else {
-            elements.premiumStatusSection.innerHTML = `
-                <div class="api-status-badge active" style="margin-bottom: 0;">
-                    <span class="status-dot"></span>
-                    <span>Premium erişim aktif${state.premiumEmail ? ` — ${escapeHtml(state.premiumEmail)}` : ''}</span>
-                </div>
-                <button id="premium-logout-btn" class="secondary-btn" style="margin-top: 1rem; width: 100%;">
-                    Premium Çıkış Yap
-                </button>
-            `;
-            if (elements.premiumActivationSection) {
-                elements.premiumActivationSection.style.display = 'none';
-            }
-            document.getElementById('premium-logout-btn').addEventListener('click', () => {
-                clearPremiumSession();
-                refreshSubscriptionUI();
-                renderCuratedRepos();
-                showToast('Premium oturumu kapatıldı.');
-            });
-        }
-    } else {
-        elements.premiumStatusSection.innerHTML = `
-            <button id="open-pay-modal-btn" class="primary-btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
-                💳 Hemen Abone Ol (99 TL)
-            </button>
-        `;
-        if (elements.premiumActivationSection) {
-            elements.premiumActivationSection.style.display = 'block';
-        }
-        // Re-bind click event
-        document.getElementById('open-pay-modal-btn').addEventListener('click', openPaymentModal);
-    }
-}
-
-function openPaymentModal() {
-    elements.paymentModal.classList.add('active');
-    elements.paymentModal.inert = false;
-    elements.paymentModal.setAttribute('aria-hidden', 'false');
-    // Clear inputs
-    elements.cardHolderInput.value = '';
-    elements.cardNumberInput.value = '';
-    elements.cardExpiryInput.value = '';
-    elements.cardCvcInput.value = '';
-    elements.previewCardHolder.textContent = 'AD SOYAD';
-    elements.previewCardNumber.textContent = '•••• •••• •••• ••••';
-    elements.previewCardExpiry.textContent = 'AA/YY';
-    elements.paymentModalClose.focus();
-}
-
-function closePaymentModal() {
-    elements.paymentModal.classList.remove('active');
-    elements.paymentModal.setAttribute('aria-hidden', 'true');
-    elements.paymentModal.inert = true;
-}
-
-// Global reference for inline buttons in template strings
-if (typeof window !== 'undefined') {
-    window.openPaymentModal = openPaymentModal;
-}
-
 // Node Exports for Testing
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
         parseGitHubInput,
         generateDefaultInstructions,
-        validatePremiumLogin,
         escapeHtml,
         fetchWeeklyPopularRepos,
         fetchMostStarredRepos,

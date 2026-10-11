@@ -1,7 +1,6 @@
 const {
     parseGitHubInput,
     generateDefaultInstructions,
-    validatePremiumLogin,
     escapeHtml,
     fetchWeeklyPopularRepos,
     fetchMostStarredRepos,
@@ -85,37 +84,118 @@ describe('Default Instructions Generator', () => {
     });
 });
 
-describe('Premium Login Validation', () => {
-    test('accepts the documented demo account', () => {
-        expect(validatePremiumLogin('premium@gitturkce.com', 'premium123')).toEqual({
-            isValid: true,
-            message: ''
+describe('Ücretsiz proje erişimi', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const vm = require('vm');
+    const source = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
+    const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+    let context;
+    let nodes;
+    let storage;
+
+    function createNode() {
+        const classes = new Set();
+        const listeners = {};
+        return {
+            innerHTML: '',
+            style: {},
+            children: [],
+            classList: {
+                add: value => classes.add(value),
+                remove: value => classes.delete(value),
+                contains: value => classes.has(value)
+            },
+            addEventListener: (event, handler) => { listeners[event] = handler; },
+            click: () => listeners.click(),
+            appendChild(card) { this.children.push(card); },
+            querySelector: () => createNode()
+        };
+    }
+
+    beforeEach(() => {
+        nodes = Object.fromEntries([...html.matchAll(/id="([^"]+)"/g)]
+            .map(match => [match[1], createNode()]));
+        const tabs = [...html.matchAll(/class="nav-tab[^"]*" id="([^"]+)" data-target="([^"]+)"/g)]
+            .map(match => Object.assign(nodes[match[1]], { getAttribute: () => match[2] }));
+        const panels = [...html.matchAll(/class="content-panel[^"]*" id="([^"]+)"/g)]
+            .map(match => nodes[match[1]]);
+        const repos = Array.from({ length: 5 }, (_, index) => ({
+            name: `proje-${index}`, owner: 'ugur', language: 'JavaScript', tags: ['Agent', 'Skills']
+        }));
+        storage = new Map([
+            ['git_tr_subscribed', 'true'],
+            ['git_tr_\u0070remium_email', 'ogrenci@example.com'],
+            ['git_tr_bookmarks', '[]'],
+            ['git_tr_search_cache', '{}']
+        ]);
+        context = vm.createContext({
+            document: {
+                getElementById: id => nodes[id] || null,
+                querySelectorAll: selector => selector === '.nav-tab' ? tabs : selector === '.content-panel' ? panels : [],
+                createElement: createNode,
+                addEventListener: jest.fn()
+            },
+            localStorage: {
+                getItem: key => storage.get(key) ?? null,
+                removeItem: jest.fn(key => storage.delete(key))
+            },
+            CURATED_REPOSITORIES: repos
+        });
+        vm.runInContext(source, context);
+        context.openRepoDetail = jest.fn();
+        for (const name of ['fetchWeeklyPopularRepos', 'fetchMostStarredRepos', 'fetchAgentRepos', 'fetchSkillsRepos', 'searchGitHub']) {
+            context[name] = jest.fn().mockResolvedValue(repos);
+        }
+        context.fetchGitHubRepo = jest.fn().mockResolvedValue(repos[0]);
+    });
+
+    test.each(['all', 'weekly', 'starred', 'Agent', 'Skills'])('%s listesindeki beş kart da detay açar', async filter => {
+        vm.runInContext(`state.curatedFilter = '${filter}'`, context);
+        await context.renderCuratedRepos();
+        const cards = nodes['curated-grid'].children;
+        expect(cards).toHaveLength(5);
+        cards.forEach(card => {
+            expect(card.className).toBe('repo-card');
+            card.click();
+        });
+        expect(context.openRepoDetail).toHaveBeenCalledTimes(5);
+    });
+
+    test.each([['ara', 5], ['ugur/proje-0', 1]])('%s aramasındaki tüm kartlar detay açar', async (query, count) => {
+        nodes['search-input'].value = query;
+        await context.performSearch();
+        const cards = nodes['live-grid'].children;
+        expect(cards).toHaveLength(count);
+        cards.forEach(card => card.click());
+        expect(context.openRepoDetail).toHaveBeenCalledTimes(count);
+    });
+
+    test('kalan üç sekme kendi panelini açar', () => {
+        context.initTabs();
+        const names = ['curated', 'live', 'settings'];
+        names.forEach(name => {
+            nodes[`tab-${name}`].click();
+            names.forEach(target => {
+                expect(nodes[`panel-${target}`].classList.contains('active')).toBe(target === name);
+            });
         });
     });
 
-    test('normalizes email casing and surrounding spaces', () => {
-        expect(validatePremiumLogin('  PREMIUM@GITTURKCE.COM ', 'premium123').isValid).toBe(true);
+    test('HTML açılışı eksik DOM referansı olmadan tamamlanır', () => {
+        const ready = context.document.addEventListener.mock.calls
+            .find(([event]) => event === 'DOMContentLoaded')[1];
+        expect(() => ready()).not.toThrow();
+        expect(nodes['curated-grid'].children).toHaveLength(5);
     });
 
-    test('rejects malformed email addresses', () => {
-        expect(validatePremiumLogin('premium', 'premium123')).toEqual({
-            isValid: false,
-            message: 'Geçerli bir e-posta adresi girin.'
-        });
-    });
-
-    test('rejects short passwords', () => {
-        expect(validatePremiumLogin('premium@gitturkce.com', '123')).toEqual({
-            isValid: false,
-            message: 'Şifre en az 6 karakter olmalıdır.'
-        });
-    });
-
-    test('rejects unknown premium credentials', () => {
-        expect(validatePremiumLogin('ogrenci@example.com', 'premium123')).toEqual({
-            isValid: false,
-            message: 'E-posta veya şifre hatalı. Demo hesap bilgilerini kullanın.'
-        });
+    test('açılış yalnız iki eski erişim kaydını temizler', () => {
+        expect(context.localStorage.removeItem.mock.calls).toEqual([
+            ['git_tr_subscribed'], ['git_tr_\u0070remium_email']
+        ]);
+        expect([...storage.entries()]).toEqual([
+            ['git_tr_bookmarks', '[]'], ['git_tr_search_cache', '{}']
+        ]);
     });
 });
 
@@ -292,6 +372,7 @@ describe('Favoriler ve dil filtresi', () => {
         const stubs = {
             localStorage: {
                 getItem: jest.fn(key => storage.get(key) ?? null),
+                removeItem: jest.fn(key => storage.delete(key)),
                 setItem: jest.fn((key, value) => storage.set(key, String(value)))
             },
             document: {
