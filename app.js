@@ -265,7 +265,7 @@ function filterByLanguage(repos) {
     return repos.filter(repo => {
         const lang = (repo.language || '').toLowerCase();
         const target = state.languageFilter.toLowerCase();
-        if (target === 'c++') return lang.includes('c++') || lang.includes('c');
+        if (target === 'c++') return lang === 'c' || lang === 'c++';
         return lang.includes(target);
     });
 }

@@ -427,6 +427,19 @@ describe('Favoriler ve dil filtresi', () => {
         expect(app.filterByLanguage(repos)).toEqual(repos.slice(0, 2));
     });
 
+    test('C/C++ filtresi yalnız C ve C++ repolarını döndürür', () => {
+        const repos = [
+            { language: 'C' },
+            { language: 'C++' },
+            { language: 'JavaScript' },
+            { language: 'C#' },
+            { language: 'CSS' },
+            { language: 'Objective-C' }
+        ];
+        app.state.languageFilter = 'C++';
+        expect(app.filterByLanguage(repos)).toEqual(repos.slice(0, 2));
+    });
+
     test('aktif dil filtresi boş, null ve eksik dil alanlarını eler', () => {
         app.state.languageFilter = 'python';
         expect(app.filterByLanguage([{ language: '' }, { language: null }, {}])).toEqual([]);
