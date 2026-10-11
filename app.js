@@ -1157,7 +1157,13 @@ function getSmartDomainExplanation(repo) {
     const topics = Array.isArray(repo.topics) ? repo.topics.join(' ').toLowerCase() : '';
     const fullText = `${name} ${desc} ${topics}`;
 
-    // 1. Check if repo is in curated knowledge base
+    // 1. Check if repo is in curated knowledge base (owner/name first: names like "skills" are not unique)
+    const ownerName = repo.owner ? (repo.owner.login || repo.owner) : '';
+    const knowledge = typeof REPO_KNOWLEDGE !== 'undefined' ? REPO_KNOWLEDGE : {};
+    const ownerKnowledge = knowledge[`${ownerName}/${repo.name}`.toLowerCase()];
+    if (ownerKnowledge) {
+        return ownerKnowledge;
+    }
     if (REPO_SPECIFIC_KNOWLEDGE[repo.name]) {
         return REPO_SPECIFIC_KNOWLEDGE[repo.name];
     }

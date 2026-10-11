@@ -22,16 +22,17 @@ module.exports = [
             globals: {
                 ...globals.browser,
                 module: 'readonly',
-                CURATED_REPOSITORIES: 'readonly'
+                CURATED_REPOSITORIES: 'readonly',
+                REPO_KNOWLEDGE: 'readonly'
             }
         }
     },
     {
-        files: ['data.js'],
+        files: ['data.js', 'knowledge.js'],
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'script',
-            globals: globals.browser
+            globals: { ...globals.browser, module: 'readonly' }
         },
         rules: {
             'no-unused-vars': 'off'
@@ -42,7 +43,7 @@ module.exports = [
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'commonjs',
-            globals: globals.jest
+            globals: { ...globals.jest, ...globals.node }
         }
     }
 ];

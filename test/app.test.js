@@ -461,3 +461,53 @@ describe('Favoriler ve dil filtresi', () => {
         expect(app.filterByLanguage([])).toEqual([]);
     });
 });
+
+describe('Seçkin repo bilgi tablosu (knowledge.js)', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const knowledge = require('../knowledge.js');
+    const curated = new Function(
+        `${fs.readFileSync(path.join(__dirname, '..', 'data.js'), 'utf8')}; return CURATED_REPOSITORIES;`
+    )();
+    const legacy = require('../app.js').REPO_SPECIFIC_KNOWLEDGE;
+
+    afterEach(() => {
+        delete global.REPO_KNOWLEDGE;
+    });
+
+    test('her seçkin repo için repoya özel bilgi vardır', () => {
+        const missing = curated.filter(repo =>
+            !legacy[repo.name] && !knowledge[`${repo.owner}/${repo.name}`.toLowerCase()]
+        );
+        expect(missing.map(repo => `${repo.owner}/${repo.name}`)).toEqual([]);
+    });
+
+    test('bütün kayıtlarda dört alan dolu ve örnek kalıbı var', () => {
+        for (const [key, entry] of Object.entries(knowledge)) {
+            for (const field of ['turkishTitle', 'turkishSummary', 'whyUseful', 'beginnerExplanation']) {
+                expect(typeof entry[field]).toBe('string');
+                expect(entry[field].trim().length).toBeGreaterThan(15);
+            }
+            expect(entry.beginnerExplanation).toContain('<br><br><strong>Gerçekçi Örnek:</strong>');
+            const withoutAllowedTags = entry.beginnerExplanation.replace(/<br><br>|<strong>|<\/strong>/g, '');
+            expect(`${key}: ${/[<>]/.test(withoutAllowedTags)}`).toBe(`${key}: false`);
+        }
+    });
+
+    test('iki repo aynı özet cümlesini paylaşmaz', () => {
+        const seen = new Map();
+        for (const [key, entry] of Object.entries(knowledge)) {
+            expect(seen.has(entry.turkishSummary) ? `${key} = ${seen.get(entry.turkishSummary)}` : null).toBeNull();
+            seen.set(entry.turkishSummary, key);
+        }
+    });
+
+    test('aynı ada sahip repolar sahibine göre ayrılır', () => {
+        global.REPO_KNOWLEDGE = knowledge;
+        const anthropic = getSmartDomainExplanation({ name: 'skills', owner: 'anthropics' });
+        const pocock = getSmartDomainExplanation({ name: 'skills', owner: { login: 'mattpocock' } });
+        expect(anthropic).toBe(knowledge['anthropics/skills']);
+        expect(pocock).toBe(knowledge['mattpocock/skills']);
+        expect(anthropic.turkishSummary).not.toBe(pocock.turkishSummary);
+    });
+});
